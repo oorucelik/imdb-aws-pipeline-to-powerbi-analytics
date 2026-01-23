@@ -1,0 +1,9 @@
+IMDB İÇİN: 
+
+https://image.tmdb.org/t/p/w300_and_h450_face/ 
+
+TMDB İÇİN: 
+
+https://image.tmdb.org/t/p/h30/ 
+
+bu linkin sonuna backdrop_poster (/xxx.jpg) eklersen thumbnail alırsın 
