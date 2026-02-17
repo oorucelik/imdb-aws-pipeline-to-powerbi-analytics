@@ -8,7 +8,7 @@ from pyspark.context import SparkContext
 from awsglue.context import GlueContext
 from awsglue.utils import getResolvedOptions
 from awsglue.job import Job
-
+from pyspark.sql.functions import concat, lit, lpad, col
 from pyspark.sql import functions as F
 
 # ----------------------------
@@ -161,6 +161,25 @@ dim_episode = stg_episode.select(
     F.col("air_date")
 ).dropDuplicates(["content_id","season_number","episode_number"])
 
+# Episode için key oluşturma
+dim_episode = dim_episode.withColumn(
+    "season_key",
+    concat(
+        col("content_id"),
+        lit("_S"),
+        lpad(col("season_number"), 2, "0")
+    )
+).withColumn(
+    "episode_key",
+    concat(
+        col("content_id"),
+        lit("_S"),
+        lpad(col("season_number"), 2, "0"),
+        lit("_E"),
+        lpad(col("episode_number"), 2, "0")  # 01, 02, ... formatında
+    )
+)
+
 dim_episode_count = dim_episode.count()
 print(f"   ✅ dim_episode: {dim_episode_count} records")
 
@@ -178,7 +197,15 @@ dim_season = stg_season.select(
   F.col("overview"), 
   F.col("poster_path")
 ).dropDuplicates(["content_id", "season_number"])
-
+# Season için key oluşturma
+dim_season = dim_season.withColumn(
+    "season_key",
+    concat(
+        col("content_id"),
+        lit("_S"),
+        lpad(col("season_number"), 2, "0")  # 01, 02, ... formatında
+    )
+)
 dim_season_count = dim_season.count()
 print(f"   ✅ dim_season: {dim_season_count} records")
 

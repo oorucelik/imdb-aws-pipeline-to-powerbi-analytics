@@ -1,0 +1,8 @@
+imdb_fetch_season_episode.py yazmamız lazım diziler için.
+
+PowerBI'a bağlan ve yeni KPI'ları ekle
+EventBridge schedule ekle (her gün 06:00)
+
+YAPILANLAR:
+FACT_POPULARITY_DEPLOYMENT_MD oku
+imdb_build_fact_popularity.py oku anla test

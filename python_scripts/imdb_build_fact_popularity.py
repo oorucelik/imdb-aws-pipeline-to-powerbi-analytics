@@ -34,10 +34,7 @@ job.init(args["JOB_NAME"], args)
 STG_POPULARITY_PATH = "s3://oruc-imdb-lake/raw/stg_popularity/"
 FACT_POPULARITY_PATH = "s3://oruc-imdb-lake/gold/fact_popularity/"
 
-print("=" * 80)
 print("Building Fact Popularity Table")
-print("=" * 80)
-
 # ----------------------------
 # 1. Read Today's Snapshot
 # ----------------------------
@@ -96,7 +93,6 @@ try:
         F.col("content_id"),
         F.col("rank").alias("prev_rank")
     )
-    
     print(f"   Yesterday's record count: {yesterday_data.count()}")
     
 except Exception as e:
@@ -107,7 +103,6 @@ except Exception as e:
 # 3. Calculate Metrics
 # ----------------------------
 print("\n🔢 Calculating rank_change, is_new_joiner, is_leaver...")
-
 if yesterday_data is not None:
     # Join today with yesterday
     comparison = today_ranked.alias("today").join(
@@ -123,7 +118,12 @@ if yesterday_data is not None:
         F.col("today.rank"),
         F.col("today.popularity"),
         # rank_change: negative = rank improved, positive = rank worsened
-        (F.col("today.rank") - F.coalesce(F.col("yesterday.prev_rank"), F.lit(999))).alias("rank_change"),
+            #For new joiners = 0, otherwise = today.rank - yesterday.rank        
+        F.when(
+            F.col("yesterday.prev_rank").isNull(),
+            F.lit(0)).otherwise(
+                F.col("today.rank") - F.col("yesterday.prev_rank")
+                ).alias("rank_change"),
         # is_new_joiner: was not in yesterday's list
         F.when(F.col("yesterday.prev_rank").isNull(), True).otherwise(False).alias("is_new_joiner"),
         # is_leaver: will be calculated separately (was in yesterday, not in today)
@@ -163,16 +163,13 @@ else:
     )
 
 print(f"   Final fact records for today: {fact_today_final.count()}")
-
 # Show summary statistics
 print("\n📊 Today's Summary:")
 fact_today_final.groupBy("is_new_joiner", "is_leaver").count().show()
-
 print("\nTop 10 Gainers (biggest rank improvements):")
 fact_today_final.filter(
     (F.col("rank_change") < 0) & (~F.col("is_new_joiner"))
 ).orderBy("rank_change").show(10, truncate=False)
-
 print("\nTop 10 Decliners (biggest rank drops):")
 fact_today_final.filter(
     (F.col("rank_change") > 0) & (~F.col("is_leaver"))
@@ -182,20 +179,14 @@ fact_today_final.filter(
 # 4. Write to Gold Layer (Append Mode)
 # ----------------------------
 print(f"\n💾 Writing to {FACT_POPULARITY_PATH} (append mode)...")
-
-fact_today_final.write.mode("append").partitionBy("loadDate").parquet(FACT_POPULARITY_PATH)
-
+fact_today_final.write.mode("overwrite").option("partitionOverwriteMode","dynamic").partitionBy("loadDate").parquet(FACT_POPULARITY_PATH)
 print("✅ Fact Popularity table updated successfully!")
 
 # ----------------------------
 # Job Summary
 # ----------------------------
-print("\n" + "=" * 80)
 print("JOB SUMMARY")
-print("=" * 80)
 print(f"Load Date: {today}")
 print(f"Total Records Written: {fact_today_final.count()}")
 fact_today_final.groupBy("is_new_joiner", "is_leaver").count().show()
-print("=" * 80)
-
 job.commit()
