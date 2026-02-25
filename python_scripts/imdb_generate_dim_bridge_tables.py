@@ -68,7 +68,7 @@ BRIDGE_CONTENT_NETWORK_PATH = "s3://oruc-imdb-lake/gold/bridge_content_network/"
 # LOAD STAGING DATA
 # ============================================================================
 
-print("Loading staging data from S3...")
+#print("Loading staging data from S3...")
 
 stg_content = spark.read.parquet(STG_CONTENT_DETAIL)
 stg_person = spark.read.parquet(STG_CONTENT_PERSON)
@@ -79,16 +79,16 @@ stg_network = read_parquet_or_none(STG_CONTENT_NETWORK)
 stg_season = read_parquet_or_none(STG_CONTENT_SEASON)  
 stg_episode = read_parquet_or_none(STG_CONTENT_EPISODE)
 
-print("✅ Staging data loaded")
+#print("✅ Staging data loaded")
 
 # ============================================================================
 # DIMENSION TABLES - FULL OVERWRITE
 # ============================================================================
-print("BUILDING DIMENSION TABLES")
+#print("BUILDING DIMENSION TABLES")
 # ----------------------------
 # 1. DIM_CONTENT
 # ----------------------------
-print("📊 Building dim_content...")
+#print("📊 Building dim_content...")
 
 dim_content = stg_content.select(
     F.col("content_id"),
@@ -113,12 +113,12 @@ dim_content = stg_content.select(
 ).dropDuplicates(["content_id"])
 
 dim_content_count = dim_content.count()
-print(f"   ✅ dim_content: {dim_content_count} records")
+#print(f"   ✅ dim_content: {dim_content_count} records")
 
 # ----------------------------
 # 2. DIM_PERSON
 # ----------------------------
-print("\n📊 Building dim_person...")
+#print("\n📊 Building dim_person...")
 
 dim_person = stg_person.select(
     F.col("person_id"),
@@ -128,24 +128,24 @@ dim_person = stg_person.select(
 ).dropDuplicates(["person_id"])
 
 dim_person_count = dim_person.count()
-print(f"   ✅ dim_person: {dim_person_count} records")
+#print(f"   ✅ dim_person: {dim_person_count} records")
 
 # ----------------------------
 # 3. DIM_GENRE
 # ----------------------------
-print("\n📊 Building dim_genre...")
+#print("\n📊 Building dim_genre...")
 
 dim_genre = stg_genre.select(
     F.col("genre_name")
 ).dropDuplicates(["genre_name"])
 
 dim_genre_count = dim_genre.count()
-print(f"   ✅ dim_genre: {dim_genre_count} records")
+#print(f"   ✅ dim_genre: {dim_genre_count} records")
 
 # ----------------------------
 # 4. DIM_EPISODE
 # ----------------------------
-print("\n📊 Building dim_episode...")
+#print("\n📊 Building dim_episode...")
 
 dim_episode = stg_episode.select(
     F.col("content_id"), 
@@ -181,12 +181,12 @@ dim_episode = dim_episode.withColumn(
 )
 
 dim_episode_count = dim_episode.count()
-print(f"   ✅ dim_episode: {dim_episode_count} records")
+#print(f"   ✅ dim_episode: {dim_episode_count} records")
 
 # ----------------------------
 # 5. DIM_SEASON
 # ----------------------------
-print("\n📊 Building dim_season...")
+#print("\n📊 Building dim_season...")
 
 dim_season = stg_season.select(
   F.col("content_id"), 
@@ -207,12 +207,12 @@ dim_season = dim_season.withColumn(
     )
 )
 dim_season_count = dim_season.count()
-print(f"   ✅ dim_season: {dim_season_count} records")
+#print(f"   ✅ dim_season: {dim_season_count} records")
 
 # ----------------------------
 # 6. DIM_PRODUCTION_COMPANY
 # ----------------------------
-print("\n📊 Building dim_production_company...")
+#print("\n📊 Building dim_production_company...")
 
 dim_company = stg_prod.select(
     F.col("company_id"),
@@ -221,7 +221,7 @@ dim_company = stg_prod.select(
 ).dropDuplicates(["company_id"])
 
 dim_company_count = dim_company.count()
-print(f"   ✅ dim_production_company: {dim_company_count} records")
+#print(f"   ✅ dim_production_company: {dim_company_count} records")
 
 
 
@@ -229,23 +229,23 @@ print(f"   ✅ dim_production_company: {dim_company_count} records")
 # 7. DIM_INTEREST (Optional)
 # ----------------------------
 if stg_interest is not None:
-    print("\n📊 Building dim_interest...")
+    #print("\n📊 Building dim_interest...")
     
     dim_interest = stg_interest.select(
         F.col("interest_name")
     ).dropDuplicates(["interest_name"])
     
     dim_interest_count = dim_interest.count()
-    print(f"   ✅ dim_interest: {dim_interest_count} records")
+    #print(f"   ✅ dim_interest: {dim_interest_count} records")
 else:
     dim_interest = None
-    print("\n⚠️  dim_interest: Skipped (no staging data)")
+    #print("\n⚠️  dim_interest: Skipped (no staging data)")
 
 # ----------------------------
 # 8. DIM_NETWORK (Optional)
 # ----------------------------
 if stg_network is not None:
-    print("\n📊 Building dim_network...")
+    #print("\n📊 Building dim_network...")
     
     cols = stg_network.columns
     if "network_id" in cols:
@@ -261,53 +261,53 @@ if stg_network is not None:
         ).dropDuplicates(["network_name"])
     
     dim_network_count = dim_network.count()
-    print(f"   ✅ dim_network: {dim_network_count} records")
+    #print(f"   ✅ dim_network: {dim_network_count} records")
 else:
     dim_network = None
-    print("\n⚠️  dim_network: Skipped (no staging data)")
+    #print("\n⚠️  dim_network: Skipped (no staging data)")
 
 # ============================================================================
 # WRITE DIMENSION TABLES
 # ============================================================================
 
-print("\n" + "="*80)
-print("WRITING DIMENSION TABLES TO S3")
-print("="*80)
+#print("\n" + "="*80)
+#print("WRITING DIMENSION TABLES TO S3")
+#print("="*80)
 
 dim_content.write.mode("overwrite").parquet(DIM_CONTENT_PATH)
-print(f"✅ {DIM_CONTENT_PATH}")
+#print(f"✅ {DIM_CONTENT_PATH}")
 
 dim_person.write.mode("overwrite").parquet(DIM_PERSON_PATH)
-print(f"✅ {DIM_PERSON_PATH}")
+#print(f"✅ {DIM_PERSON_PATH}")
 
 dim_genre.write.mode("overwrite").parquet(DIM_GENRE_PATH)
-print(f"✅ {DIM_GENRE_PATH}")
+#print(f"✅ {DIM_GENRE_PATH}")
 
 dim_company.write.mode("overwrite").parquet(DIM_COMPANY_PATH)
-print(f"✅ {DIM_COMPANY_PATH}")
+#print(f"✅ {DIM_COMPANY_PATH}")
 
 dim_episode.write.mode("overwrite").parquet(DIM_EPISODE_PATH)
-print(f"✅ {DIM_EPISODE_PATH}")
+#print(f"✅ {DIM_EPISODE_PATH}")
 
 dim_season.write.mode("overwrite").parquet(DIM_SEASON_PATH)
-print(f"✅ {DIM_SEASON_PATH}")
+#print(f"✅ {DIM_SEASON_PATH}")
 
 if dim_interest is not None:
     dim_interest.write.mode("overwrite").parquet(DIM_INTEREST_PATH)
-    print(f"✅ {DIM_INTEREST_PATH}")
+    #print(f"✅ {DIM_INTEREST_PATH}")
 
 if dim_network is not None:
     dim_network.write.mode("overwrite").parquet(DIM_NETWORK_PATH)
-    print(f"✅ {DIM_NETWORK_PATH}")
+    #print(f"✅ {DIM_NETWORK_PATH}")
 
 # ============================================================================
 # BRIDGE TABLES - FULL OVERWRITE
 # ============================================================================
-print("BUILDING BRIDGE TABLES")
+#print("BUILDING BRIDGE TABLES")
 # ----------------------------
 # 1. BRIDGE: Content ↔ Genre
 # ----------------------------
-print("\n🔗 Building bridge_content_genre...")
+#print("\n🔗 Building bridge_content_genre...")
 
 bridge_content_genre = stg_genre.select(
     F.col("content_id"),
@@ -326,12 +326,12 @@ bridge_content_genre = stg_genre.select(
 ).distinct()
 
 bridge_content_genre_count = bridge_content_genre.count()
-print(f"   ✅ {bridge_content_genre_count} relationships")
+#print(f"   ✅ {bridge_content_genre_count} relationships")
 
 # ----------------------------
 # 2. BRIDGE: Content ↔ Person
 # ----------------------------
-print("\n🔗 Building bridge_content_person...")
+#print("\n🔗 Building bridge_content_person...")
 
 bridge_content_person = stg_person.select(
     F.col("content_id"),
@@ -356,12 +356,12 @@ bridge_content_person = stg_person.select(
 ).distinct()
 
 bridge_content_person_count = bridge_content_person.count()
-print(f"   ✅ {bridge_content_person_count} relationships")
+#print(f"   ✅ {bridge_content_person_count} relationships")
 
 # ----------------------------
 # 3. BRIDGE: Content ↔ Company
 # ----------------------------
-print("\n🔗 Building bridge_content_company...")
+#print("\n🔗 Building bridge_content_company...")
 
 bridge_content_company = stg_prod.select(
     F.col("content_id"),
@@ -380,13 +380,13 @@ bridge_content_company = stg_prod.select(
 ).distinct()
 
 bridge_content_company_count = bridge_content_company.count()
-print(f"   ✅ {bridge_content_company_count} relationships")
+#print(f"   ✅ {bridge_content_company_count} relationships")
 
 # ----------------------------
 # 4. BRIDGE: Content ↔ Interest (Optional)
 # ----------------------------
 if stg_interest is not None and dim_interest is not None:
-    print("\n🔗 Building bridge_content_interest...")
+    #print("\n🔗 Building bridge_content_interest...")
     
     bridge_content_interest = stg_interest.select(
         F.col("content_id"),
@@ -405,16 +405,16 @@ if stg_interest is not None and dim_interest is not None:
     ).distinct()
     
     bridge_content_interest_count = bridge_content_interest.count()
-    print(f"   ✅ {bridge_content_interest_count} relationships")
+    #print(f"   ✅ {bridge_content_interest_count} relationships")
 else:
     bridge_content_interest = None
-    print("\n⚠️  bridge_content_interest: Skipped")
+    #print("\n⚠️  bridge_content_interest: Skipped")
 
 # ----------------------------
 # 5. BRIDGE: Content ↔ Network (Optional)
 # ----------------------------
 if stg_network is not None and dim_network is not None:
-    print("\n🔗 Building bridge_content_network...")
+    #print("\n🔗 Building bridge_content_network...")
     
     if "network_id" in stg_network.columns:
         bridge_content_network = stg_network.select(
@@ -450,60 +450,56 @@ if stg_network is not None and dim_network is not None:
         ).distinct()
     
     bridge_content_network_count = bridge_content_network.count()
-    print(f"   ✅ {bridge_content_network_count} relationships")
+    #print(f"   ✅ {bridge_content_network_count} relationships")
 else:
     bridge_content_network = None
-    print("\n⚠️  bridge_content_network: Skipped")
+    #print("\n⚠️  bridge_content_network: Skipped")
 
 # ============================================================================
 # WRITE BRIDGE TABLES
 # ============================================================================
 
-print("\n" + "="*80)
-print("WRITING BRIDGE TABLES TO S3")
-print("="*80)
+#print("\n" + "="*80)
+#print("WRITING BRIDGE TABLES TO S3")
+#print("="*80)
 
 bridge_content_genre.write.mode("overwrite").parquet(BRIDGE_CONTENT_GENRE_PATH)
-print(f"✅ {BRIDGE_CONTENT_GENRE_PATH}")
+#print(f"✅ {BRIDGE_CONTENT_GENRE_PATH}")
 
 bridge_content_person.write.mode("overwrite").parquet(BRIDGE_CONTENT_PERSON_PATH)
-print(f"✅ {BRIDGE_CONTENT_PERSON_PATH}")
+#print(f"✅ {BRIDGE_CONTENT_PERSON_PATH}")
 
 bridge_content_company.write.mode("overwrite").parquet(BRIDGE_CONTENT_COMPANY_PATH)
-print(f"✅ {BRIDGE_CONTENT_COMPANY_PATH}")
+#print(f"✅ {BRIDGE_CONTENT_COMPANY_PATH}")
 
 if bridge_content_interest is not None:
     bridge_content_interest.write.mode("overwrite").parquet(BRIDGE_CONTENT_INTEREST_PATH)
-    print(f"✅ {BRIDGE_CONTENT_INTEREST_PATH}")
+    #print(f"✅ {BRIDGE_CONTENT_INTEREST_PATH}")
 
 if bridge_content_network is not None:
     bridge_content_network.write.mode("overwrite").parquet(BRIDGE_CONTENT_NETWORK_PATH)
-    print(f"✅ {BRIDGE_CONTENT_NETWORK_PATH}")
+    #print(f"✅ {BRIDGE_CONTENT_NETWORK_PATH}")
 
 # ============================================================================
 # JOB SUMMARY
 # ============================================================================
 
-print("📊 Dimension Tables:")
-print(f"   - dim_content: {dim_content_count}")
-print(f"   - dim_person: {dim_person_count}")
-print(f"   - dim_genre: {dim_genre_count}")
-print(f"   - dim_production_company: {dim_company_count}")
-print(f"   - dim_episode: {dim_episode_count}")
-print(f"   - dim_season: {dim_season_count}")
-if dim_interest is not None:
-    print(f"   - dim_interest: {dim_interest_count}")
-if dim_network is not None:
-    print(f"   - dim_network: {dim_network_count}")
+#print("📊 Dimension Tables:")
+#print(f"   - dim_content: {dim_content_count}")
+#print(f"   - dim_person: {dim_person_count}")
+#print(f"   - dim_genre: {dim_genre_count}")
+#print(f"   - dim_production_company: {dim_company_count}")
+#print(f"   - dim_episode: {dim_episode_count}")
+#print(f"   - dim_season: {dim_season_count}")
+#print(f"   - dim_interest: {dim_interest_count}")
+#print(f"   - dim_network: {dim_network_count}")
 
-print("\n🔗 Bridge Tables:")
-print(f"   - bridge_content_genre: {bridge_content_genre_count}")
-print(f"   - bridge_content_person: {bridge_content_person_count}")
-print(f"   - bridge_content_company: {bridge_content_company_count}")
-if bridge_content_interest is not None:
-    print(f"   - bridge_content_interest: {bridge_content_interest_count}")
-if bridge_content_network is not None:
-    print(f"   - bridge_content_network: {bridge_content_network_count}")
+#print("\n🔗 Bridge Tables:")
+#print(f"   - bridge_content_genre: {bridge_content_genre_count}")
+#print(f"   - bridge_content_person: {bridge_content_person_count}")
+#print(f"   - bridge_content_company: {bridge_content_company_count}")
+#print(f"   - bridge_content_interest: {bridge_content_interest_count}")
+#print(f"   - bridge_content_network: {bridge_content_network_count}")
 
-print("\n✅ Job completed successfully!")
+#print("\n✅ Job completed successfully!")
 job.commit()

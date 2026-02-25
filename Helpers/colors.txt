@@ -2,3 +2,4 @@ green:90CEA1
 blue:01B4E4
 yellow:F5C518
 darkblue:0D253F
+middleblue:027798

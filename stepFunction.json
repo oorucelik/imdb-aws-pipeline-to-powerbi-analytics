@@ -194,7 +194,21 @@
                 "BackoffRate": 2
               }
             ],
+            "Catch": [
+              {
+                "ErrorEquals": [
+                  "States.Http.StatusCode.404"
+                ],
+                "ResultPath": "$.error404",
+                "Next": "Skip Not Found"
+              }
+            ],
             "Next": "Build Popularity Record"
+          },
+          "Skip Not Found": {
+            "Type": "Pass",
+            "Result": null,
+            "End": true
           },
           "Build Popularity Record": {
             "Type": "Pass",
@@ -211,7 +225,7 @@
       },
       "ResultPath": "$.popularity",
       "ResultSelector": {
-        "records.$": "$[*]"
+        "records.$": "$[*][?(@!=null)]"
       },
       "Next": "Convert JSON to Parquet Popularity"
     },
@@ -226,154 +240,7 @@
           "records.$": "$.popularity.records"
         }
       },
-      "Next": "Run Crawlers in Parallel"
-    },
-    "Run Crawlers in Parallel": {
-      "Type": "Parallel",
-      "Branches": [
-        {
-          "StartAt": "Start ContentIDs Crawler",
-          "States": {
-            "Start ContentIDs Crawler": {
-              "Type": "Task",
-              "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
-              "Parameters": {
-                "Name": "imdb-raw-contentids-crawler"
-              },
-              "Retry": [
-                {
-                  "ErrorEquals": [
-                    "Glue.CrawlerRunningException"
-                  ],
-                  "IntervalSeconds": 10,
-                  "MaxAttempts": 3,
-                  "BackoffRate": 1.5
-                }
-              ],
-              "End": true
-            }
-          }
-        },
-        {
-          "StartAt": "Start DimContent Crawler",
-          "States": {
-            "Start DimContent Crawler": {
-              "Type": "Task",
-              "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
-              "Parameters": {
-                "Name": "imdb-gold-dimcontent-crawler"
-              },
-              "Retry": [
-                {
-                  "ErrorEquals": [
-                    "Glue.CrawlerRunningException"
-                  ],
-                  "IntervalSeconds": 10,
-                  "MaxAttempts": 3,
-                  "BackoffRate": 1.5
-                }
-              ],
-              "End": true
-            }
-          }
-        }
-      ],
-      "ResultPath": null,
-      "Next": "Wait For Crawlers"
-    },
-    "Wait For Crawlers": {
-      "Type": "Wait",
-      "Seconds": 60,
-      "Next": "Check Crawlers Status"
-    },
-    "Check Crawlers Status": {
-      "Type": "Parallel",
-      "Branches": [
-        {
-          "StartAt": "Get ContentIDs Crawler Status",
-          "States": {
-            "Get ContentIDs Crawler Status": {
-              "Type": "Task",
-              "Resource": "arn:aws:states:::aws-sdk:glue:getCrawler",
-              "Parameters": {
-                "Name": "imdb-raw-contentids-crawler"
-              },
-              "End": true
-            }
-          }
-        },
-        {
-          "StartAt": "Get DimContent Crawler Status",
-          "States": {
-            "Get DimContent Crawler Status": {
-              "Type": "Task",
-              "Resource": "arn:aws:states:::aws-sdk:glue:getCrawler",
-              "Parameters": {
-                "Name": "imdb-gold-dimcontent-crawler"
-              },
-              "End": true
-            }
-          }
-        }
-      ],
-      "ResultPath": "$.crawlers",
-      "Next": "Check If All Crawlers Ready"
-    },
-    "Check If All Crawlers Ready": {
-      "Type": "Choice",
-      "Choices": [
-        {
-          "And": [
-            {
-              "Variable": "$.crawlers[0].Crawler.State",
-              "StringEquals": "READY"
-            },
-            {
-              "Variable": "$.crawlers[1].Crawler.State",
-              "StringEquals": "READY"
-            }
-          ],
-          "Next": "Detect New Content IDs"
-        }
-      ],
-      "Default": "Wait For Crawlers"
-    },
-    "Detect New Content IDs": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
-      "Parameters": {
-        "QueryString": "SELECT DISTINCT i.id, i.type FROM stg_contentids i LEFT JOIN dim_content d ON i.id = d.content_id WHERE d.content_id IS NULL",
-        "WorkGroup": "primary",
-        "QueryExecutionContext": {
-          "Database": "oruc-db"
-        },
-        "ResultConfiguration": {
-          "OutputLocation": "s3://oruc-imdb-lake/athena-results/"
-        }
-      },
-      "ResultPath": "$.query_execution",
-      "Next": "Get New Content Results"
-    },
-    "Get New Content Results": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::athena:getQueryResults",
-      "Parameters": {
-        "QueryExecutionId.$": "$.query_execution.QueryExecution.QueryExecutionId",
-        "MaxResults": 1000
-      },
-      "ResultPath": "$.new_content",
-      "Next": "Has New Content?"
-    },
-    "Has New Content?": {
-      "Type": "Choice",
-      "Choices": [
-        {
-          "Variable": "$.new_content.ResultSet.Rows[1]",
-          "IsPresent": true,
-          "Next": "Enrich Content Metadata Glue"
-        }
-      ],
-      "Default": "End Workflow"
+      "Next": "Enrich Content Metadata Glue"
     },
     "Enrich Content Metadata Glue": {
       "Type": "Task",
@@ -406,7 +273,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
       "Parameters": {
-        "Name": "imdb-gold-factpopularity-crawler"
+        "Name": "gold-crawler"
       },
       "Retry": [
         {
@@ -419,9 +286,6 @@
         }
       ],
       "End": true
-    },
-    "End Workflow": {
-      "Type": "Succeed"
     }
   }
 }

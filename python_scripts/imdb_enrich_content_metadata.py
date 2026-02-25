@@ -62,11 +62,11 @@ TMDB_HEADERS = {
 }
 
 content_df = spark.read.parquet("s3://oruc-imdb-lake/raw/stg_contentIDs/")
-content_df.printSchema()
+#content_df.printSchema()
 
-print("Reading input from S3...")
+#print("Reading input from S3...")
 print("content_df count:", content_df.count())
-content_df.show(truncate=False)
+#content_df.show(truncate=False)
 
 
 # ---------------- Helper Functions - API Calls ----------------
@@ -118,7 +118,6 @@ def enrich_partition(rows):
             
             # Validation
             if not imdb_id or not tmdb_id or not content_type:
-                print(f"ERROR: Missing required fields in row: {row_dict}")
                 yield ("error", {
                     "content_id": imdb_id or "UNKNOWN",
                     "error": "missing_required_fields"
@@ -128,14 +127,12 @@ def enrich_partition(rows):
             
             imdb_data = fetch_imdb_content(session, imdb_id)
             if not imdb_data:
-                print("IMDB DATA EMPTY FOR:", imdb_id)
                 yield("error",{"content_id":imdb_id,"error":"imdb_empty"})
                 error_count += 1
                 continue
             
             tmdb_data = fetch_tmdb_content(session, tmdb_id)
             if not tmdb_data:
-                print("TMDB DATA EMPTY FOR:", imdb_id)
                 tmdb_data = {}
     
             yield (
@@ -315,13 +312,12 @@ def enrich_partition(rows):
                 content_id = row.asDict().get("id", "UNKNOWN")
             except:
                 pass
-            print(f"ERROR processing {content_id}: {str(e)}")
             import traceback
             traceback.print_exc()
             yield ("error", {"content_id": content_id, "error": str(e)})
     
     # Partition summary
-    print(f"Partition completed - Processed: {processed_count}, Errors: {error_count}")
+    #print(f"Partition completed - Processed: {processed_count}, Errors: {error_count}")
             
 # Debug: Her partition'da kaç satır olduğunu kontrol et
 def count_input_partition(partition):
@@ -333,13 +329,10 @@ def count_input_partition(partition):
 
 partition_sizes = content_df.rdd.mapPartitions(count_input_partition).collect()
 print(f"Partition sizes: {partition_sizes}")
-print(f"Total rows across partitions: {sum(partition_sizes)}")
+#print(f"Total rows across partitions: {sum(partition_sizes)}")
 
 # Debug: Row access test
 sample_row = content_df.rdd.first()
-print(f"Sample row type: {type(sample_row)}")
-print(f"Sample row: {sample_row}")
-print(f"Sample row asDict: {sample_row.asDict()}")
 # ---------------- Main Enrichment Loop ----------------
 result_rdd = content_df.rdd.mapPartitions(enrich_partition).cache()
 
@@ -375,13 +368,13 @@ print("=== COLLECTOR COUNTS ===")
 print("content_df (source):", content_df.count())
 print("content_detail:", content_detail.count())
 print("content_error:", content_error.count())
-print("content_person:", content_person.count())
-print("content_production:", content_production.count())
-print("content_genre:", content_genre.count())
-print("content_network:", content_network.count())
-print("content_interest:", content_interest.count())
-print("content_season:", content_season.count())
-print("content_episode:", content_episode.count())
+#print("content_person:", content_person.count())
+#print("content_production:", content_production.count())
+#print("content_genre:", content_genre.count())
+#print("content_network:", content_network.count())
+#print("content_interest:", content_interest.count())
+#print("content_season:", content_season.count())
+#print("content_episode:", content_episode.count())
 
 # ---------------- Spark DataFrame ==> S3 (STAGING) ----------------
 BUCKET = "s3://oruc-imdb-lake/stg/"
@@ -390,46 +383,46 @@ if not content_error.isEmpty():
     df = spark.createDataFrame(content_error)
     df.show(truncate=False)  # Console'da göster
     df.write.mode("overwrite").parquet(f"{BUCKET}content_error/")
-    print("content_error written")
+    #print("content_error written")
 if not content_detail.isEmpty():
     df = spark.createDataFrame(content_detail)
-    print("content_detail df count:", df.count())
+    #print("content_detail df count:", df.count())
     df.write.mode("overwrite").parquet(f"{BUCKET}content_detail/")
-    print("content_detail written")
+    #print("content_detail written")
 if not content_person.isEmpty():
     df = spark.createDataFrame(content_person)
-    print("content_person df count:", df.count())
+    #print("content_person df count:", df.count())
     df.write.mode("overwrite").parquet(f"{BUCKET}content_person/")
-    print("content_person written")
+    #print("content_person written")
 if not content_production.isEmpty():
     df = spark.createDataFrame(content_production)
-    print("content_production df count:", df.count())
+    #print("content_production df count:", df.count())
     df.write.mode("overwrite").parquet(f"{BUCKET}content_production/")
-    print("content_production written")
+    #print("content_production written")
 if not content_genre.isEmpty():
     df = spark.createDataFrame(content_genre)
-    print("content_genre df count:", df.count())
+    #print("content_genre df count:", df.count())
     df.write.mode("overwrite").parquet(f"{BUCKET}content_genre/")
-    print("content_genre written")
+    #print("content_genre written")
 if not content_network.isEmpty():
     df = spark.createDataFrame(content_network)
-    print("content_network df count:", df.count())
+    #print("content_network df count:", df.count())
     df.write.mode("overwrite").parquet(f"{BUCKET}content_network/")
-    print("content_network written")
+    #print("content_network written")
 if not content_interest.isEmpty():
     df = spark.createDataFrame(content_interest)
-    print("content_interest df count:", df.count())
+    #print("content_interest df count:", df.count())
     df.write.mode("overwrite").parquet(f"{BUCKET}content_interest/")
-    print("content_interest written")
+    #print("content_interest written")
 if not content_season.isEmpty():
     df = spark.createDataFrame(content_season)
-    print("content_season df count:", df.count())
+    #print("content_season df count:", df.count())
     df.write.mode("overwrite").parquet(f"{BUCKET}content_season/")
-    print("content_season written")
+    #print("content_season written")
 if not content_episode.isEmpty():
     df = spark.createDataFrame(content_episode)
-    print("content_episode df count:", df.count())
+    #print("content_episode df count:", df.count())
     df.write.mode("overwrite").parquet(f"{BUCKET}content_episode/")
-    print("content_episode written")
+    #print("content_episode written")
 
 job.commit()

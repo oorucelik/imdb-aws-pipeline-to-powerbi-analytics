@@ -34,11 +34,11 @@ job.init(args["JOB_NAME"], args)
 STG_POPULARITY_PATH = "s3://oruc-imdb-lake/raw/stg_popularity/"
 FACT_POPULARITY_PATH = "s3://oruc-imdb-lake/gold/fact_popularity/"
 
-print("Building Fact Popularity Table")
+#print("Building Fact Popularity Table")
 # ----------------------------
 # 1. Read Today's Snapshot
 # ----------------------------
-print("\n📥 Reading today's popularity snapshot from staging...")
+#print("\n📥 Reading today's popularity snapshot from staging...")
 
 stg_popularity = spark.read.parquet(STG_POPULARITY_PATH)
 
@@ -53,7 +53,7 @@ stg_popularity = stg_popularity.withColumn(
 
 # Get execution date (today)
 today = stg_popularity.select(F.max("loadDate")).collect()[0][0]
-print(f"   Today's date: {today}")
+#print(f"   Today's date: {today}")
 
 # Filter today's data and add rank
 today_data = stg_popularity.filter(F.col("loadDate") == today)
@@ -70,21 +70,21 @@ today_ranked = today_data.withColumn(
     "popularity"
 )
 
-print(f"   Today's snapshot count: {today_ranked.count()}")
+#print(f"   Today's snapshot count: {today_ranked.count()}")
 today_ranked.show(10, truncate=False)
 
 # ----------------------------
 # 2. Read Historical Fact Table (Previous Days)
 # ----------------------------
-print("\n📚 Reading historical fact_popularity...")
+#print("\n📚 Reading historical fact_popularity...")
 
 try:
     fact_existing = spark.read.parquet(FACT_POPULARITY_PATH)
-    print(f"   Historical records found: {fact_existing.count()}")
+    #print(f"   Historical records found: {fact_existing.count()}")
     
     # Get yesterday's date
     yesterday = today - timedelta(days=1)
-    print(f"   Yesterday's date: {yesterday}")
+    #print(f"   Yesterday's date: {yesterday}")
     
     # Get yesterday's data for comparison
     yesterday_data = fact_existing.filter(
@@ -93,16 +93,16 @@ try:
         F.col("content_id"),
         F.col("rank").alias("prev_rank")
     )
-    print(f"   Yesterday's record count: {yesterday_data.count()}")
+    #print(f"   Yesterday's record count: {yesterday_data.count()}")
     
 except Exception as e:
-    print(f"   No historical data found (first run): {e}")
+    #print(f"   No historical data found (first run): {e}")
     yesterday_data = None
 
 # ----------------------------
 # 3. Calculate Metrics
 # ----------------------------
-print("\n🔢 Calculating rank_change, is_new_joiner, is_leaver...")
+#print("\n🔢 Calculating rank_change, is_new_joiner, is_leaver...")
 if yesterday_data is not None:
     # Join today with yesterday
     comparison = today_ranked.alias("today").join(
@@ -151,7 +151,7 @@ if yesterday_data is not None:
     
 else:
     # First run - all are new joiners
-    print("   First run detected - marking all as new joiners")
+    #print("   First run detected - marking all as new joiners")
     fact_today_final = today_ranked.select(
         F.col("loadDate"),
         F.col("id").alias("content_id"),
@@ -162,15 +162,15 @@ else:
         F.lit(False).alias("is_leaver")
     )
 
-print(f"   Final fact records for today: {fact_today_final.count()}")
+#print(f"   Final fact records for today: {fact_today_final.count()}")
 # Show summary statistics
-print("\n📊 Today's Summary:")
+#print("\n📊 Today's Summary:")
 fact_today_final.groupBy("is_new_joiner", "is_leaver").count().show()
-print("\nTop 10 Gainers (biggest rank improvements):")
+#print("\nTop 10 Gainers (biggest rank improvements):")
 fact_today_final.filter(
     (F.col("rank_change") < 0) & (~F.col("is_new_joiner"))
 ).orderBy("rank_change").show(10, truncate=False)
-print("\nTop 10 Decliners (biggest rank drops):")
+#print("\nTop 10 Decliners (biggest rank drops):")
 fact_today_final.filter(
     (F.col("rank_change") > 0) & (~F.col("is_leaver"))
 ).orderBy(F.col("rank_change").desc()).show(10, truncate=False)
@@ -178,15 +178,15 @@ fact_today_final.filter(
 # ----------------------------
 # 4. Write to Gold Layer (Append Mode)
 # ----------------------------
-print(f"\n💾 Writing to {FACT_POPULARITY_PATH} (append mode)...")
+#print(f"\n💾 Writing to {FACT_POPULARITY_PATH} (append mode)...")
 fact_today_final.write.mode("overwrite").option("partitionOverwriteMode","dynamic").partitionBy("loadDate").parquet(FACT_POPULARITY_PATH)
-print("✅ Fact Popularity table updated successfully!")
+#print("✅ Fact Popularity table updated successfully!")
 
 # ----------------------------
 # Job Summary
 # ----------------------------
-print("JOB SUMMARY")
-print(f"Load Date: {today}")
-print(f"Total Records Written: {fact_today_final.count()}")
+#print("JOB SUMMARY")
+#print(f"Load Date: {today}")
+#print(f"Total Records Written: {fact_today_final.count()}")
 fact_today_final.groupBy("is_new_joiner", "is_leaver").count().show()
 job.commit()
