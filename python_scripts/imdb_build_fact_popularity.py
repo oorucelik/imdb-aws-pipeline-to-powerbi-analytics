@@ -1,15 +1,29 @@
 """
 Glue Job: imdb_build_fact_popularity.py
-Purpose: Build fact_popularity table from daily snapshots
+
+Purpose:
+    Builds the fact_popularity table from daily TMDB popularity snapshots.
+    Compares today's rankings with yesterday's to compute rank changes,
+    identify new joiners (first appearance) and leavers (dropped off).
+
+Input:
+    - s3://oruc-imdb-lake/raw/stg_popularity/   (today's snapshot)
+    - s3://oruc-imdb-lake/gold/fact_popularity/  (historical data)
+
+Output:
+    - s3://oruc-imdb-lake/gold/fact_popularity/  (partitioned by loadDate)
 
 Schema:
-- loadDate: DATE
-- content_id: STRING
-- rank: INT
-- popularity: DECIMAL
-- rank_change: INT (vs previous day)
-- is_new_joiner: BOOLEAN (new to top list)
-- is_leaver: BOOLEAN (dropped from top list)
+    - loadDate:      DATE      — snapshot date (partition key)
+    - content_id:    STRING    — IMDB ID
+    - rank:          INT       — daily popularity rank (1 = best)
+    - popularity:    DECIMAL   — TMDB popularity score
+    - rank_change:   INT       — delta vs previous day (negative = improved)
+    - is_new_joiner: BOOLEAN   — true if new to the top list today
+    - is_leaver:     BOOLEAN   — true if dropped off the list today
+
+Trigger:
+    Called by Step Functions after imdb_generate_dim_bridge_tables completes.
 """
 
 import sys
@@ -34,17 +48,14 @@ job.init(args["JOB_NAME"], args)
 STG_POPULARITY_PATH = "s3://oruc-imdb-lake/raw/stg_popularity/"
 FACT_POPULARITY_PATH = "s3://oruc-imdb-lake/gold/fact_popularity/"
 
-#print("Building Fact Popularity Table")
 # ----------------------------
 # 1. Read Today's Snapshot
 # ----------------------------
-#print("\n📥 Reading today's popularity snapshot from staging...")
-
 stg_popularity = spark.read.parquet(STG_POPULARITY_PATH)
 
-# Parse loadDate and add rank
+# Parse loadDate and cast popularity
 stg_popularity = stg_popularity.withColumn(
-    "loadDate", 
+    "loadDate",
     F.to_date(F.col("loadDate"))
 ).withColumn(
     "popularity",
@@ -53,12 +64,11 @@ stg_popularity = stg_popularity.withColumn(
 
 # Get execution date (today)
 today = stg_popularity.select(F.max("loadDate")).collect()[0][0]
-#print(f"   Today's date: {today}")
 
 # Filter today's data and add rank
 today_data = stg_popularity.filter(F.col("loadDate") == today)
 
-# Rank by popularity (higher = better rank)
+# Rank by popularity (higher popularity = better rank)
 window_spec = Window.orderBy(F.col("popularity").desc())
 today_ranked = today_data.withColumn(
     "rank",
@@ -70,22 +80,15 @@ today_ranked = today_data.withColumn(
     "popularity"
 )
 
-#print(f"   Today's snapshot count: {today_ranked.count()}")
-today_ranked.show(10, truncate=False)
-
 # ----------------------------
 # 2. Read Historical Fact Table (Previous Days)
 # ----------------------------
-#print("\n📚 Reading historical fact_popularity...")
-
 try:
     fact_existing = spark.read.parquet(FACT_POPULARITY_PATH)
-    #print(f"   Historical records found: {fact_existing.count()}")
-    
+
     # Get yesterday's date
     yesterday = today - timedelta(days=1)
-    #print(f"   Yesterday's date: {yesterday}")
-    
+
     # Get yesterday's data for comparison
     yesterday_data = fact_existing.filter(
         F.col("loadDate") == yesterday
@@ -93,16 +96,13 @@ try:
         F.col("content_id"),
         F.col("rank").alias("prev_rank")
     )
-    #print(f"   Yesterday's record count: {yesterday_data.count()}")
-    
+
 except Exception as e:
-    #print(f"   No historical data found (first run): {e}")
     yesterday_data = None
 
 # ----------------------------
 # 3. Calculate Metrics
 # ----------------------------
-#print("\n🔢 Calculating rank_change, is_new_joiner, is_leaver...")
 if yesterday_data is not None:
     # Join today with yesterday
     comparison = today_ranked.alias("today").join(
@@ -110,7 +110,7 @@ if yesterday_data is not None:
         F.col("today.id") == F.col("yesterday.content_id"),
         how="left"
     )
-    
+
     # Calculate metrics
     fact_today = comparison.select(
         F.col("today.loadDate"),
@@ -118,7 +118,7 @@ if yesterday_data is not None:
         F.col("today.rank"),
         F.col("today.popularity"),
         # rank_change: negative = rank improved, positive = rank worsened
-            #For new joiners = 0, otherwise = today.rank - yesterday.rank        
+        # For new joiners = 0, otherwise = today.rank - yesterday.rank
         F.when(
             F.col("yesterday.prev_rank").isNull(),
             F.lit(0)).otherwise(
@@ -129,7 +129,7 @@ if yesterday_data is not None:
         # is_leaver: will be calculated separately (was in yesterday, not in today)
         F.lit(False).alias("is_leaver")
     )
-    
+
     # Find leavers (in yesterday but not in today)
     today_ids = today_ranked.select(F.col("id")).distinct()
     leavers = yesterday_data.alias("yesterday").join(
@@ -139,19 +139,18 @@ if yesterday_data is not None:
     ).select(
         F.lit(today).alias("loadDate"),
         F.col("content_id"),
-        F.lit(None).cast("int").alias("rank"),  # No rank (dropped out)
+        F.lit(None).cast("int").alias("rank"),       # No rank (dropped out)
         F.lit(0.0).cast("decimal(10,2)").alias("popularity"),
-        F.lit(999).alias("rank_change"),  # Large positive = dropped
+        F.lit(999).alias("rank_change"),              # Large positive = dropped
         F.lit(False).alias("is_new_joiner"),
         F.lit(True).alias("is_leaver")
     )
-    
+
     # Union active and leavers
     fact_today_final = fact_today.union(leavers)
-    
+
 else:
-    # First run - all are new joiners
-    #print("   First run detected - marking all as new joiners")
+    # First run — all are new joiners
     fact_today_final = today_ranked.select(
         F.col("loadDate"),
         F.col("id").alias("content_id"),
@@ -162,31 +161,11 @@ else:
         F.lit(False).alias("is_leaver")
     )
 
-#print(f"   Final fact records for today: {fact_today_final.count()}")
-# Show summary statistics
-#print("\n📊 Today's Summary:")
-fact_today_final.groupBy("is_new_joiner", "is_leaver").count().show()
-#print("\nTop 10 Gainers (biggest rank improvements):")
-fact_today_final.filter(
-    (F.col("rank_change") < 0) & (~F.col("is_new_joiner"))
-).orderBy("rank_change").show(10, truncate=False)
-#print("\nTop 10 Decliners (biggest rank drops):")
-fact_today_final.filter(
-    (F.col("rank_change") > 0) & (~F.col("is_leaver"))
-).orderBy(F.col("rank_change").desc()).show(10, truncate=False)
+# ----------------------------
+# 4. Write to Gold Layer (Dynamic Partition Overwrite)
+# ----------------------------
+fact_today_final.write.mode("overwrite").option(
+    "partitionOverwriteMode", "dynamic"
+).partitionBy("loadDate").parquet(FACT_POPULARITY_PATH)
 
-# ----------------------------
-# 4. Write to Gold Layer (Append Mode)
-# ----------------------------
-#print(f"\n💾 Writing to {FACT_POPULARITY_PATH} (append mode)...")
-fact_today_final.write.mode("overwrite").option("partitionOverwriteMode","dynamic").partitionBy("loadDate").parquet(FACT_POPULARITY_PATH)
-#print("✅ Fact Popularity table updated successfully!")
-
-# ----------------------------
-# Job Summary
-# ----------------------------
-#print("JOB SUMMARY")
-#print(f"Load Date: {today}")
-#print(f"Total Records Written: {fact_today_final.count()}")
-fact_today_final.groupBy("is_new_joiner", "is_leaver").count().show()
 job.commit()
