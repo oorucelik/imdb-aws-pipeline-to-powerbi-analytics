@@ -1,6 +1,12 @@
 """
-AWS Lambda Function: JSON to Parquet Converter for Content IDs
-Bu Lambda function Step Functions'tan gelen JSON array'i direkt Parquet formatında S3'e yazar
+AWS Lambda Function: JSON to Parquet Converter
+
+Converts a JSON array (from Step Functions or S3) into Parquet format
+and writes it to S3. Used for both stg_contentIDs and stg_popularity.
+
+Dependencies (Lambda Layer):
+    - pandas
+    - pyarrow
 """
 
 import json
@@ -15,7 +21,10 @@ s3_client = boto3.client('s3')
 
 def lambda_handler(event, context):
     """
-    Event formatı:
+    Accepts records either inline or from an S3 JSON file, converts to
+    Parquet, and writes to the specified S3 location.
+
+    Event format (inline records):
     {
         "bucket": "oruc-imdb-lake",
         "output_key": "raw/stg_contentIDs/data.parquet",
@@ -24,8 +33,8 @@ def lambda_handler(event, context):
             {"id": "tt7654321", "type": "tv", "tmdb_id": "456"}
         ]
     }
-    
-    Alternatif (S3'ten JSON okuma):
+
+    Event format (read from S3):
     {
         "bucket": "oruc-imdb-lake",
         "input_key": "raw/stg_contentIDs/data.json",
@@ -34,7 +43,7 @@ def lambda_handler(event, context):
     """
     
     try:
-        # Parametreleri al
+        # Extract parameters
         bucket = event.get('bucket', 'oruc-imdb-lake')
         output_key = event.get('output_key')
         input_key = event.get('input_key')
@@ -45,9 +54,8 @@ def lambda_handler(event, context):
                 'body': json.dumps('output_key is required')
             }
         
-        # Records'u al (ya event'ten ya da S3'ten)
+        # Get records from event payload or from S3
         if input_key:
-            # S3'ten JSON oku
             response = s3_client.get_object(Bucket=bucket, Key=input_key)
             json_content = response['Body'].read().decode('utf-8')
             records = json.loads(json_content)
@@ -60,7 +68,7 @@ def lambda_handler(event, context):
                 'body': json.dumps('No records found in input')
             }
         
-        # Flatten nested arrays if needed (Step Functions bazen nested array gönderir)
+        # Flatten nested arrays (Step Functions may send nested arrays from Map states)
         flat_records = []
         for item in records:
             if isinstance(item, list):
@@ -68,17 +76,13 @@ def lambda_handler(event, context):
             else:
                 flat_records.append(item)
         
-        # Pandas DataFrame oluştur
+        # Convert to Parquet in memory
         df = pd.DataFrame(flat_records)
-        
-        # PyArrow Table oluştur
         table = pa.Table.from_pandas(df)
-        
-        # Parquet'i memory'de oluştur
         parquet_buffer = BytesIO()
         pq.write_table(table, parquet_buffer, compression='snappy')
         
-        # S3'e yaz
+        # Write to S3
         s3_client.put_object(
             Bucket=bucket,
             Key=output_key,
