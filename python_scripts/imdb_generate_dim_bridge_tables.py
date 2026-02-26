@@ -1,5 +1,30 @@
-# Glue Job: imdb_generate_dim_bridge_tables.py
-# Purpose: Full overwrite approach for dimension and bridge table generation
+"""
+Glue Job: imdb_generate_dim_bridge_tables.py
+
+Purpose:
+    Reads enriched staging tables from S3, builds dimension and bridge tables,
+    and writes them to the gold layer using a full-overwrite strategy.
+
+Input (s3://oruc-imdb-lake/stg/):
+    - content_detail/      → dim_content
+    - content_person/      → dim_person, bridge_content_person
+    - content_genre/       → dim_genre, bridge_content_genre
+    - content_production/  → dim_production_company, bridge_content_company
+    - content_interest/    → dim_interest, bridge_content_interest (optional)
+    - content_network/     → dim_network, bridge_content_network (optional
+    - content_season/      → dim_season
+    - content_episode/     → dim_episode
+
+Output (s3://oruc-imdb-lake/gold/):
+    Dimension tables: dim_content, dim_person, dim_genre, dim_production_company,
+                      dim_interest, dim_network, dim_season, dim_episode
+    Bridge tables:    bridge_content_genre, bridge_content_person,
+                      bridge_content_company, bridge_content_interest,
+                      bridge_content_network
+
+Trigger:
+    Called by Step Functions after imdb_enrich_content_metadata completes.
+"""
 
 import sys
 from datetime import datetime
@@ -27,9 +52,7 @@ RUN_TS = datetime.utcnow()
 # Helper Functions
 # ----------------------------
 def read_parquet_or_none(path: str):
-    """
-    Try to read parquet, return None if doesn't exist
-    """
+    """Try to read a Parquet path from S3. Returns None if it doesn't exist."""
     try:
         return spark.read.parquet(path)
     except Exception:
@@ -68,28 +91,22 @@ BRIDGE_CONTENT_NETWORK_PATH = "s3://oruc-imdb-lake/gold/bridge_content_network/"
 # LOAD STAGING DATA
 # ============================================================================
 
-#print("Loading staging data from S3...")
-
 stg_content = spark.read.parquet(STG_CONTENT_DETAIL)
 stg_person = spark.read.parquet(STG_CONTENT_PERSON)
 stg_genre = spark.read.parquet(STG_CONTENT_GENRE)
 stg_prod = spark.read.parquet(STG_CONTENT_PROD)
 stg_interest = read_parquet_or_none(STG_CONTENT_INTEREST)
 stg_network = read_parquet_or_none(STG_CONTENT_NETWORK)
-stg_season = read_parquet_or_none(STG_CONTENT_SEASON)  
+stg_season = read_parquet_or_none(STG_CONTENT_SEASON)
 stg_episode = read_parquet_or_none(STG_CONTENT_EPISODE)
-
-#print("✅ Staging data loaded")
 
 # ============================================================================
 # DIMENSION TABLES - FULL OVERWRITE
 # ============================================================================
-#print("BUILDING DIMENSION TABLES")
+
 # ----------------------------
 # 1. DIM_CONTENT
 # ----------------------------
-#print("📊 Building dim_content...")
-
 dim_content = stg_content.select(
     F.col("content_id"),
     F.col("content_type"),
@@ -113,13 +130,10 @@ dim_content = stg_content.select(
 ).dropDuplicates(["content_id"])
 
 dim_content_count = dim_content.count()
-#print(f"   ✅ dim_content: {dim_content_count} records")
 
 # ----------------------------
 # 2. DIM_PERSON
 # ----------------------------
-#print("\n📊 Building dim_person...")
-
 dim_person = stg_person.select(
     F.col("person_id"),
     F.col("person_name"),
@@ -128,40 +142,34 @@ dim_person = stg_person.select(
 ).dropDuplicates(["person_id"])
 
 dim_person_count = dim_person.count()
-#print(f"   ✅ dim_person: {dim_person_count} records")
 
 # ----------------------------
 # 3. DIM_GENRE
 # ----------------------------
-#print("\n📊 Building dim_genre...")
-
 dim_genre = stg_genre.select(
     F.col("genre_name")
 ).dropDuplicates(["genre_name"])
 
 dim_genre_count = dim_genre.count()
-#print(f"   ✅ dim_genre: {dim_genre_count} records")
 
 # ----------------------------
 # 4. DIM_EPISODE
 # ----------------------------
-#print("\n📊 Building dim_episode...")
-
 dim_episode = stg_episode.select(
-    F.col("content_id"), 
-    F.col("season_number"), 
-    F.col("episode_number"), 
-    F.col("primary_title"), 
-    F.col("original_title"), 
-    F.col("runtime_minutes"), 
-    F.col("average_rating"), 
-    F.col("vote_count"), 
-    F.col("still_path"), 
-    F.col("episode_type"), 
+    F.col("content_id"),
+    F.col("season_number"),
+    F.col("episode_number"),
+    F.col("primary_title"),
+    F.col("original_title"),
+    F.col("runtime_minutes"),
+    F.col("average_rating"),
+    F.col("vote_count"),
+    F.col("still_path"),
+    F.col("episode_type"),
     F.col("air_date")
 ).dropDuplicates(["content_id","season_number","episode_number"])
 
-# Episode için key oluşturma
+# Generate composite keys for season/episode relationships
 dim_episode = dim_episode.withColumn(
     "season_key",
     concat(
@@ -176,44 +184,39 @@ dim_episode = dim_episode.withColumn(
         lit("_S"),
         lpad(col("season_number"), 2, "0"),
         lit("_E"),
-        lpad(col("episode_number"), 2, "0")  # 01, 02, ... formatında
+        lpad(col("episode_number"), 2, "0")
     )
 )
 
 dim_episode_count = dim_episode.count()
-#print(f"   ✅ dim_episode: {dim_episode_count} records")
 
 # ----------------------------
 # 5. DIM_SEASON
 # ----------------------------
-#print("\n📊 Building dim_season...")
-
 dim_season = stg_season.select(
-  F.col("content_id"), 
-  F.col("season_number"), 
-  F.col("air_date"), 
-  F.col("episode_count"), 
-  F.col("name"), 
-  F.col("overview"), 
+  F.col("content_id"),
+  F.col("season_number"),
+  F.col("air_date"),
+  F.col("episode_count"),
+  F.col("name"),
+  F.col("overview"),
   F.col("poster_path")
 ).dropDuplicates(["content_id", "season_number"])
-# Season için key oluşturma
+
+# Generate composite key for season
 dim_season = dim_season.withColumn(
     "season_key",
     concat(
         col("content_id"),
         lit("_S"),
-        lpad(col("season_number"), 2, "0")  # 01, 02, ... formatında
+        lpad(col("season_number"), 2, "0")
     )
 )
 dim_season_count = dim_season.count()
-#print(f"   ✅ dim_season: {dim_season_count} records")
 
 # ----------------------------
 # 6. DIM_PRODUCTION_COMPANY
 # ----------------------------
-#print("\n📊 Building dim_production_company...")
-
 dim_company = stg_prod.select(
     F.col("company_id"),
     F.col("company_name"),
@@ -221,32 +224,22 @@ dim_company = stg_prod.select(
 ).dropDuplicates(["company_id"])
 
 dim_company_count = dim_company.count()
-#print(f"   ✅ dim_production_company: {dim_company_count} records")
-
-
 
 # ----------------------------
 # 7. DIM_INTEREST (Optional)
 # ----------------------------
 if stg_interest is not None:
-    #print("\n📊 Building dim_interest...")
-    
     dim_interest = stg_interest.select(
         F.col("interest_name")
     ).dropDuplicates(["interest_name"])
-    
     dim_interest_count = dim_interest.count()
-    #print(f"   ✅ dim_interest: {dim_interest_count} records")
 else:
     dim_interest = None
-    #print("\n⚠️  dim_interest: Skipped (no staging data)")
 
 # ----------------------------
 # 8. DIM_NETWORK (Optional)
 # ----------------------------
 if stg_network is not None:
-    #print("\n📊 Building dim_network...")
-    
     cols = stg_network.columns
     if "network_id" in cols:
         dim_network = stg_network.select(
@@ -259,56 +252,34 @@ if stg_network is not None:
             F.col("network_name"),
             F.col("network_poster")
         ).dropDuplicates(["network_name"])
-    
     dim_network_count = dim_network.count()
-    #print(f"   ✅ dim_network: {dim_network_count} records")
 else:
     dim_network = None
-    #print("\n⚠️  dim_network: Skipped (no staging data)")
 
 # ============================================================================
 # WRITE DIMENSION TABLES
 # ============================================================================
 
-#print("\n" + "="*80)
-#print("WRITING DIMENSION TABLES TO S3")
-#print("="*80)
-
 dim_content.write.mode("overwrite").parquet(DIM_CONTENT_PATH)
-#print(f"✅ {DIM_CONTENT_PATH}")
-
 dim_person.write.mode("overwrite").parquet(DIM_PERSON_PATH)
-#print(f"✅ {DIM_PERSON_PATH}")
-
 dim_genre.write.mode("overwrite").parquet(DIM_GENRE_PATH)
-#print(f"✅ {DIM_GENRE_PATH}")
-
 dim_company.write.mode("overwrite").parquet(DIM_COMPANY_PATH)
-#print(f"✅ {DIM_COMPANY_PATH}")
-
 dim_episode.write.mode("overwrite").parquet(DIM_EPISODE_PATH)
-#print(f"✅ {DIM_EPISODE_PATH}")
-
 dim_season.write.mode("overwrite").parquet(DIM_SEASON_PATH)
-#print(f"✅ {DIM_SEASON_PATH}")
 
 if dim_interest is not None:
     dim_interest.write.mode("overwrite").parquet(DIM_INTEREST_PATH)
-    #print(f"✅ {DIM_INTEREST_PATH}")
 
 if dim_network is not None:
     dim_network.write.mode("overwrite").parquet(DIM_NETWORK_PATH)
-    #print(f"✅ {DIM_NETWORK_PATH}")
 
 # ============================================================================
 # BRIDGE TABLES - FULL OVERWRITE
 # ============================================================================
-#print("BUILDING BRIDGE TABLES")
+
 # ----------------------------
 # 1. BRIDGE: Content ↔ Genre
 # ----------------------------
-#print("\n🔗 Building bridge_content_genre...")
-
 bridge_content_genre = stg_genre.select(
     F.col("content_id"),
     F.col("genre_name")
@@ -326,13 +297,10 @@ bridge_content_genre = stg_genre.select(
 ).distinct()
 
 bridge_content_genre_count = bridge_content_genre.count()
-#print(f"   ✅ {bridge_content_genre_count} relationships")
 
 # ----------------------------
 # 2. BRIDGE: Content ↔ Person
 # ----------------------------
-#print("\n🔗 Building bridge_content_person...")
-
 bridge_content_person = stg_person.select(
     F.col("content_id"),
     F.col("person_id"),
@@ -356,13 +324,10 @@ bridge_content_person = stg_person.select(
 ).distinct()
 
 bridge_content_person_count = bridge_content_person.count()
-#print(f"   ✅ {bridge_content_person_count} relationships")
 
 # ----------------------------
 # 3. BRIDGE: Content ↔ Company
 # ----------------------------
-#print("\n🔗 Building bridge_content_company...")
-
 bridge_content_company = stg_prod.select(
     F.col("content_id"),
     F.col("company_id")
@@ -380,14 +345,11 @@ bridge_content_company = stg_prod.select(
 ).distinct()
 
 bridge_content_company_count = bridge_content_company.count()
-#print(f"   ✅ {bridge_content_company_count} relationships")
 
 # ----------------------------
 # 4. BRIDGE: Content ↔ Interest (Optional)
 # ----------------------------
 if stg_interest is not None and dim_interest is not None:
-    #print("\n🔗 Building bridge_content_interest...")
-    
     bridge_content_interest = stg_interest.select(
         F.col("content_id"),
         F.col("interest_name")
@@ -403,19 +365,14 @@ if stg_interest is not None and dim_interest is not None:
         F.col("content_id"),
         F.col("interest_name")
     ).distinct()
-    
     bridge_content_interest_count = bridge_content_interest.count()
-    #print(f"   ✅ {bridge_content_interest_count} relationships")
 else:
     bridge_content_interest = None
-    #print("\n⚠️  bridge_content_interest: Skipped")
 
 # ----------------------------
 # 5. BRIDGE: Content ↔ Network (Optional)
 # ----------------------------
 if stg_network is not None and dim_network is not None:
-    #print("\n🔗 Building bridge_content_network...")
-    
     if "network_id" in stg_network.columns:
         bridge_content_network = stg_network.select(
             F.col("content_id"),
@@ -448,58 +405,22 @@ if stg_network is not None and dim_network is not None:
             F.col("content_id"),
             F.col("network_name")
         ).distinct()
-    
     bridge_content_network_count = bridge_content_network.count()
-    #print(f"   ✅ {bridge_content_network_count} relationships")
 else:
     bridge_content_network = None
-    #print("\n⚠️  bridge_content_network: Skipped")
 
 # ============================================================================
 # WRITE BRIDGE TABLES
 # ============================================================================
 
-#print("\n" + "="*80)
-#print("WRITING BRIDGE TABLES TO S3")
-#print("="*80)
-
 bridge_content_genre.write.mode("overwrite").parquet(BRIDGE_CONTENT_GENRE_PATH)
-#print(f"✅ {BRIDGE_CONTENT_GENRE_PATH}")
-
 bridge_content_person.write.mode("overwrite").parquet(BRIDGE_CONTENT_PERSON_PATH)
-#print(f"✅ {BRIDGE_CONTENT_PERSON_PATH}")
-
 bridge_content_company.write.mode("overwrite").parquet(BRIDGE_CONTENT_COMPANY_PATH)
-#print(f"✅ {BRIDGE_CONTENT_COMPANY_PATH}")
 
 if bridge_content_interest is not None:
     bridge_content_interest.write.mode("overwrite").parquet(BRIDGE_CONTENT_INTEREST_PATH)
-    #print(f"✅ {BRIDGE_CONTENT_INTEREST_PATH}")
 
 if bridge_content_network is not None:
     bridge_content_network.write.mode("overwrite").parquet(BRIDGE_CONTENT_NETWORK_PATH)
-    #print(f"✅ {BRIDGE_CONTENT_NETWORK_PATH}")
 
-# ============================================================================
-# JOB SUMMARY
-# ============================================================================
-
-#print("📊 Dimension Tables:")
-#print(f"   - dim_content: {dim_content_count}")
-#print(f"   - dim_person: {dim_person_count}")
-#print(f"   - dim_genre: {dim_genre_count}")
-#print(f"   - dim_production_company: {dim_company_count}")
-#print(f"   - dim_episode: {dim_episode_count}")
-#print(f"   - dim_season: {dim_season_count}")
-#print(f"   - dim_interest: {dim_interest_count}")
-#print(f"   - dim_network: {dim_network_count}")
-
-#print("\n🔗 Bridge Tables:")
-#print(f"   - bridge_content_genre: {bridge_content_genre_count}")
-#print(f"   - bridge_content_person: {bridge_content_person_count}")
-#print(f"   - bridge_content_company: {bridge_content_company_count}")
-#print(f"   - bridge_content_interest: {bridge_content_interest_count}")
-#print(f"   - bridge_content_network: {bridge_content_network_count}")
-
-#print("\n✅ Job completed successfully!")
 job.commit()
