@@ -143,7 +143,7 @@ The dashboard (`IMDB-TMDB Popular Analysis Dashboard.pbix`) connects to the Glue
 - **Detail Pages**: Drill-through to individual movie/series details, including seasons and episodes for TV content
 - **Trend Analysis**: Popularity trends over time
 
-Custom icons in `logos/` are used throughout the report. DAX formula screenshots are preserved in `screenshots/latestVersion/`.
+Custom icons in `logos/` are used throughout the report. DAX formulas can be found at [`docs/DAX_formulas.md`](docs/DAX_formulas.md)
 
 ## How to Run
 
