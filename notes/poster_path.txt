@@ -1,0 +1,7 @@
+IMDB:
+https://image.tmdb.org/t/p/w300_and_h450_face/ 
+
+TMDB:
+https://image.tmdb.org/t/p/h30/ 
+
+add this to the end of the link to get thumbnail: backdrop_poster (/xxx.jpg)
