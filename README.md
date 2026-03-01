@@ -51,7 +51,10 @@ aws_project/
 ├── stepFunction.json                  # AWS Step Functions state machine definition
 │
 ├── docs/
-│   └── data_catalog.md                # Dimensional model documentation
+│   └── Data Catalog.md                    # Dimensional model documentation
+|   └── DAX Formulas.md                    # DAX formula explanations
+|   └── Dashboard Visuals Details.json     # PowerBI performance analyzer output 
+|   └── Step Function.json                 # AWS StepFunction JSON code
 │
 ├── Helpers/                           # Reference files
 │   ├── DataCatalog.txt                # Original data catalog (legacy)
