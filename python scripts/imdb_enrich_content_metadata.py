@@ -41,7 +41,7 @@ from awsglue.utils import getResolvedOptions
 from awsglue.job import Job
 from pyspark.sql import Row
 
-args = getResolvedOptions(sys.argv, ["JOB_NAME"])
+args = getResolvedOptions(sys.argv, ["JOB_NAME", "IMDB_SECRET_ARN", "TMDB_SECRET_ARN", "S3_BUCKET"])
 sc = SparkContext()
 glueContext = GlueContext(sc)
 spark = glueContext.spark_session
@@ -52,14 +52,8 @@ job.init(args["JOB_NAME"], args)
 IMDB_API_HOST = "https://imdb236.p.rapidapi.com/api/imdb"
 TMDB_API_HOST = "https://api.themoviedb.org/3"
 
-IMDB_SECRET_ARN = (
-    "arn:aws:secretsmanager:eu-north-1:XXXXXXXXXXXX:secret:"
-    "events!connection/IMDB_API_CONNECTION/0c5b5d72-bfe0-40c3-b9c1-8f9e27caa807-8MWTDP"
-)
-TMDB_SECRET_ARN = (
-    "arn:aws:secretsmanager:eu-north-1:XXXXXXXXXXXX:secret:"
-    "events!connection/TMDB_API_CONNECTION/5788f53d-4460-45ed-90a8-088fb5c580ff-X79n8u"
-)
+IMDB_SECRET_ARN = args["IMDB_SECRET_ARN"]
+TMDB_SECRET_ARN = args["TMDB_SECRET_ARN"]
 
 
 def load_secret_json(secret_arn):
@@ -91,8 +85,8 @@ TMDB_HEADERS = {
     "Authorization": tmdb_api_key,
     "accept": "application/json",
 }
-
-content_df = spark.read.parquet("s3://oruc-imdb-lake/raw/stg_contentIDs/")
+S3_BUCKET = args["S3_BUCKET"]
+content_df = spark.read.parquet(f"s3://{S3_BUCKET}/raw/stg_contentIDs/")
 print("content_df count:", content_df.count())
 
 
@@ -397,7 +391,7 @@ print("content_detail:", content_detail.count())
 print("content_error:", content_error.count())
 
 # ---------------- Write DataFrames to S3 (Staging Layer) ----------------
-BUCKET = "s3://oruc-imdb-lake/stg/"
+BUCKET = f"s3://{S3_BUCKET}/stg/"
 
 if not content_error.isEmpty():
     df = spark.createDataFrame(content_error)
