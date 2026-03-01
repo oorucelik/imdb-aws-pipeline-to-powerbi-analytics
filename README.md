@@ -52,6 +52,7 @@ aws_project/
 │
 ├── docs/
 │   └── data_catalog.md                # Dimensional model documentation
+|   └── DAX_formulas.md                # DAX formula explanations
 │
 ├── Helpers/                           # Reference files
 │   ├── DataCatalog.txt                # Original data catalog (legacy)
