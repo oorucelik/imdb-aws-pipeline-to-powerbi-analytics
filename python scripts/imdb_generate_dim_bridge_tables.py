@@ -129,8 +129,6 @@ dim_content = stg_content.select(
     F.col("updated_at")
 ).dropDuplicates(["content_id"])
 
-dim_content_count = dim_content.count()
-
 # ----------------------------
 # 2. DIM_PERSON
 # ----------------------------
@@ -141,16 +139,12 @@ dim_person = stg_person.select(
     F.col("person_poster")
 ).dropDuplicates(["person_id"])
 
-dim_person_count = dim_person.count()
-
 # ----------------------------
 # 3. DIM_GENRE
 # ----------------------------
 dim_genre = stg_genre.select(
     F.col("genre_name")
 ).dropDuplicates(["genre_name"])
-
-dim_genre_count = dim_genre.count()
 
 # ----------------------------
 # 4. DIM_EPISODE
@@ -188,8 +182,6 @@ dim_episode = dim_episode.withColumn(
     )
 )
 
-dim_episode_count = dim_episode.count()
-
 # ----------------------------
 # 5. DIM_SEASON
 # ----------------------------
@@ -212,7 +204,6 @@ dim_season = dim_season.withColumn(
         lpad(col("season_number"), 2, "0")
     )
 )
-dim_season_count = dim_season.count()
 
 # ----------------------------
 # 6. DIM_PRODUCTION_COMPANY
@@ -223,8 +214,6 @@ dim_company = stg_prod.select(
     F.col("company_poster")
 ).dropDuplicates(["company_id"])
 
-dim_company_count = dim_company.count()
-
 # ----------------------------
 # 7. DIM_INTEREST (Optional)
 # ----------------------------
@@ -232,7 +221,6 @@ if stg_interest is not None:
     dim_interest = stg_interest.select(
         F.col("interest_name")
     ).dropDuplicates(["interest_name"])
-    dim_interest_count = dim_interest.count()
 else:
     dim_interest = None
 
@@ -252,7 +240,7 @@ if stg_network is not None:
             F.col("network_name"),
             F.col("network_poster")
         ).dropDuplicates(["network_name"])
-    dim_network_count = dim_network.count()
+    
 else:
     dim_network = None
 
@@ -272,6 +260,7 @@ if dim_interest is not None:
 
 if dim_network is not None:
     dim_network.write.mode("overwrite").parquet(DIM_NETWORK_PATH)
+
 
 # ============================================================================
 # BRIDGE TABLES - FULL OVERWRITE
@@ -295,8 +284,6 @@ bridge_content_genre = stg_genre.select(
     F.col("content_id"),
     F.col("genre_name")
 ).distinct()
-
-bridge_content_genre_count = bridge_content_genre.count()
 
 # ----------------------------
 # 2. BRIDGE: Content ↔ Person
@@ -323,8 +310,6 @@ bridge_content_person = stg_person.select(
     F.col("order_no")
 ).distinct()
 
-bridge_content_person_count = bridge_content_person.count()
-
 # ----------------------------
 # 3. BRIDGE: Content ↔ Company
 # ----------------------------
@@ -344,7 +329,6 @@ bridge_content_company = stg_prod.select(
     F.col("company_id")
 ).distinct()
 
-bridge_content_company_count = bridge_content_company.count()
 
 # ----------------------------
 # 4. BRIDGE: Content ↔ Interest (Optional)
@@ -365,7 +349,6 @@ if stg_interest is not None and dim_interest is not None:
         F.col("content_id"),
         F.col("interest_name")
     ).distinct()
-    bridge_content_interest_count = bridge_content_interest.count()
 else:
     bridge_content_interest = None
 
@@ -405,7 +388,6 @@ if stg_network is not None and dim_network is not None:
             F.col("content_id"),
             F.col("network_name")
         ).distinct()
-    bridge_content_network_count = bridge_content_network.count()
 else:
     bridge_content_network = None
 
