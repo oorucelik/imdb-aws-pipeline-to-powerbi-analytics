@@ -353,65 +353,19 @@ def enrich_partition(rows):
             traceback.print_exc()
             yield ("error", {"content_id": content_id, "error": str(e)})
 
-
 # ---------------- Main Enrichment Loop ----------------
 result_rdd = content_df.rdd.mapPartitions(enrich_partition).cache()
-
-content_detail = result_rdd.filter(lambda item: item[0] == "detail").map(
-    lambda item: Row(**item[1])
-)
-content_person = result_rdd.filter(lambda item: item[0] == "person").map(
-    lambda item: Row(**item[1])
-)
-content_production = result_rdd.filter(lambda item: item[0] == "production").map(
-    lambda item: Row(**item[1])
-)
-content_genre = result_rdd.filter(lambda item: item[0] == "genre").map(
-    lambda item: Row(**item[1])
-)
-content_network = result_rdd.filter(lambda item: item[0] == "network").map(
-    lambda item: Row(**item[1])
-)
-content_interest = result_rdd.filter(lambda item: item[0] == "interest").map(
-    lambda item: Row(**item[1])
-)
-content_season = result_rdd.filter(lambda item: item[0] == "season").map(
-    lambda item: Row(**item[1])
-)
-content_episode = result_rdd.filter(lambda item: item[0] == "episode").map(
-    lambda item: Row(**item[1])
-)
-content_error = result_rdd.filter(lambda item: item[0] == "error").map(
-    lambda item: Row(**item[1])
-)
-
-print("=== COLLECTOR COUNTS ===")
-print("content_df (source):", content_df.count())
-print("content_detail:", content_detail.count())
-print("content_error:", content_error.count())
-
-# ---------------- Write DataFrames to S3 (Staging Layer) ----------------
+tables = ["detail","person","production","genre","network","interest","season","episode","error"]
 BUCKET = f"s3://{S3_BUCKET}/stg/"
 
-if not content_error.isEmpty():
-    df = spark.createDataFrame(content_error)
-    df.show(truncate=False)
-    df.write.mode("overwrite").parquet(f"{BUCKET}content_error/")
-if not content_detail.isEmpty():
-    spark.createDataFrame(content_detail).write.mode("overwrite").parquet(f"{BUCKET}content_detail/")
-if not content_person.isEmpty():
-    spark.createDataFrame(content_person).write.mode("overwrite").parquet(f"{BUCKET}content_person/")
-if not content_production.isEmpty():
-    spark.createDataFrame(content_production).write.mode("overwrite").parquet(f"{BUCKET}content_production/")
-if not content_genre.isEmpty():
-    spark.createDataFrame(content_genre).write.mode("overwrite").parquet(f"{BUCKET}content_genre/")
-if not content_network.isEmpty():
-    spark.createDataFrame(content_network).write.mode("overwrite").parquet(f"{BUCKET}content_network/")
-if not content_interest.isEmpty():
-    spark.createDataFrame(content_interest).write.mode("overwrite").parquet(f"{BUCKET}content_interest/")
-if not content_season.isEmpty():
-    spark.createDataFrame(content_season).write.mode("overwrite").parquet(f"{BUCKET}content_season/")
-if not content_episode.isEmpty():
-    spark.createDataFrame(content_episode).write.mode("overwrite").parquet(f"{BUCKET}content_episode/")
+for table in tables:
+    rows = result_rdd.filter(lambda item: item[0] == table).map(lambda item: Row(**item[1]))
+    if table == "detail":
+        print("content_detail:", rows.count())
+    if table == "error":
+        print("content_error:", rows.count())
+    if not rows.isEmpty():
+        # Write DataFrames to S3 (Staging Layer)
+        spark.createDataFrame(rows).write.mode("overwrite").parquet(f"{BUCKET}content_{table}/")
 
 job.commit()
