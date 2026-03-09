@@ -1,0 +1,35 @@
+{
+  "type": "calculated",
+  "name": "TotalRuntime_Series_Display",
+  "dataType": "string",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "VAR totalRuntime = dim_content[TotalRuntime_Series]",
+    "--for display",
+    "VAR totalHours = QUOTIENT(totalRuntime,60)",
+    "VAR totalMinutes = MOD(totalRuntime,60)",
+    "RETURN ",
+    "    SWITCH(",
+    "        TRUE(),",
+    "        ISBLANK(totalRuntime),\"-\",",
+    "        totalHours=0,totalMinutes & \"m\",",
+    "        totalMinutes=0,totalHours & \"h\",",
+    "        totalHours & \"h \" & totalMinutes & \"m\"",
+    "    )"
+  ],
+  "sortByColumn": "TotalRuntime_Series",
+  "lineageTag": "172fd3a3-970e-4c65-8464-67af97b465df",
+  "summarizeBy": "none",
+  "changedProperties": [
+    {
+      "property": "SortByColumn"
+    }
+  ],
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

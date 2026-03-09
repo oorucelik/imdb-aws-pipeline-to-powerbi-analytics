@@ -1,0 +1,26 @@
+{
+  "type": "calculated",
+  "name": "RuntimeUnited",
+  "dataType": "string",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "VAR runtimeMovie = dim_content[RuntimeDisplay]",
+    "VAR runtimeSerie = dim_content[AVG_Episode_Runtime_Display]",
+    "",
+    "RETURN ",
+    "IF(",
+    "    runtimeMovie = \"-\", --returns whichever is available",
+    "    runtimeSerie,",
+    "    runtimeMovie",
+    ")"
+  ],
+  "lineageTag": "ff8d8fc2-3842-417c-9b07-c1dae1d9f67e",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

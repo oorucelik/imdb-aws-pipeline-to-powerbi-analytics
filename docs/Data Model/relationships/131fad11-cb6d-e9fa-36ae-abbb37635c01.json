@@ -1,0 +1,7 @@
+{
+  "name": "131fad11-cb6d-e9fa-36ae-abbb37635c01",
+  "fromTable": "bridge_content_network",
+  "fromColumn": "network_id",
+  "toTable": "dim_network",
+  "toColumn": "network_id"
+}

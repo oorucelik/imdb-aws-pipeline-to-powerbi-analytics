@@ -1,0 +1,13 @@
+{
+  "name": "Prod. Company#",
+  "expression": [
+    "",
+    "COUNTX(",
+    "    RELATEDTABLE(bridge_content_company),",
+    "    SELECTEDVALUE(bridge_content_company[company_id])",
+    "    )"
+  ],
+  "formatString": "0",
+  "displayFolder": "Aggregations",
+  "lineageTag": "0928e00d-a6bd-4e5f-99b6-bd0699fe8813"
+}

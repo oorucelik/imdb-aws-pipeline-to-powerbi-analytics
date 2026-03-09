@@ -1,0 +1,21 @@
+{
+  "type": "calculated",
+  "name": "Genres",
+  "dataType": "string",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "CONCATENATEX(",
+    "    RELATEDTABLE(bridge_content_genre),",
+    "    RELATED(dim_genre[Genres]),",
+    "    \", \")"
+  ],
+  "lineageTag": "d1dc089e-904a-4f96-b46b-67acbc258fdf",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

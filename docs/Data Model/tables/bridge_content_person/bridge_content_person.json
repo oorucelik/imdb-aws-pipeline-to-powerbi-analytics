@@ -1,0 +1,14 @@
+{
+  "name": "bridge_content_person",
+  "lineageTag": "3b20bb5a-674e-4cc3-81d7-ca87f4a2fe24",
+  "annotations": [
+    {
+      "name": "PBI_ResultType",
+      "value": "Table"
+    },
+    {
+      "name": "PBI_NavigationStepName",
+      "value": "Navigation"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "bridge_content_person",
+  "mode": "import",
+  "source": {
+    "type": "m",
+    "expression": [
+      "let",
+      "    Source = AmazonAthena.Databases(\"Amazon Athena\", null, []),",
+      "    AwsDataCatalog_Database = Source{[Name=\"AwsDataCatalog\",Kind=\"Database\"]}[Data],",
+      "    #\"oruc-db_Schema\" = AwsDataCatalog_Database{[Name=\"oruc-db\",Kind=\"Schema\"]}[Data],",
+      "    bridge_content_person_Table = #\"oruc-db_Schema\"{[Name=\"bridge_content_person\",Kind=\"Table\"]}[Data],",
+      "    #\"Extracted Text Between Delimiters\" = Table.TransformColumns(bridge_content_person_Table, {{\"character_names\", each Text.BetweenDelimiters(_, \"[\", \"]\"), type text}}),",
+      "    #\"Replaced Value\" = Table.ReplaceValue(#\"Extracted Text Between Delimiters\",\"_\",\" \",Replacer.ReplaceText,{\"role_type\"}),",
+      "    #\"Capitalized Each Word\" = Table.TransformColumns(#\"Replaced Value\",{{\"role_type\", Text.Proper, type text}})",
+      "in",
+      "    #\"Capitalized Each Word\""
+    ]
+  }
+}

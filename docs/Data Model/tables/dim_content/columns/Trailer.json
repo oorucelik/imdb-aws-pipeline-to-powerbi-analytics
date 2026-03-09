@@ -1,0 +1,14 @@
+{
+  "name": "Trailer",
+  "dataType": "string",
+  "sourceColumn": "Trailer",
+  "lineageTag": "12ffcd77-ea47-4df8-998f-1417a25f4511",
+  "dataCategory": "WebUrl",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

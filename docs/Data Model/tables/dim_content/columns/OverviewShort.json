@@ -1,0 +1,22 @@
+{
+  "type": "calculated",
+  "name": "OverviewShort",
+  "dataType": "string",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "IF(",
+    "    LEN(dim_content[Overview])>=300,",
+    "    LEFT(dim_content[Overview],300) & \"..\",",
+    "    dim_content[Overview]",
+    ")"
+  ],
+  "lineageTag": "dfda01a5-d627-491b-9f51-858020f91244",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

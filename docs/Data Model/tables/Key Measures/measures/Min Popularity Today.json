@@ -1,0 +1,22 @@
+{
+  "name": "Min Popularity Today",
+  "expression": [
+    "",
+    "VAR latestDate = [Latest Popularity Date]",
+    "RETURN ",
+    "CALCULATE(",
+    "    MIN(fact_popularity[Popularity]),",
+    "    fact_popularity[loaddate]= latestDate,",
+    "    REMOVEFILTERS(dim_content),",
+    "    fact_popularity[is_leaver]=FALSE",
+    ")"
+  ],
+  "displayFolder": "Time Intelligence",
+  "lineageTag": "38d96297-8add-4b8a-935c-1e6d46517d97",
+  "annotations": [
+    {
+      "name": "PBI_FormatHint",
+      "value": "{\"isGeneralNumber\":true}"
+    }
+  ]
+}

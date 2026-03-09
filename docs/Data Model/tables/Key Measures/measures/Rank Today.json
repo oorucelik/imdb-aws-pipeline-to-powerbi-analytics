@@ -1,0 +1,20 @@
+{
+  "name": "Rank Today",
+  "expression": [
+    "",
+    "VAR latestDate = [Latest Popularity Date]",
+    "RETURN",
+    "    CALCULATE(",
+    "        SUM(fact_popularity[Rank]),",
+    "        fact_popularity[loaddate]=latestDate",
+    "        )"
+  ],
+  "displayFolder": "Time Intelligence",
+  "lineageTag": "76223be0-0030-40fa-8406-4c95cbc6b625",
+  "annotations": [
+    {
+      "name": "PBI_FormatHint",
+      "value": "{\"isGeneralNumber\":true}"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "fact_popularity",
+  "mode": "import",
+  "source": {
+    "type": "m",
+    "expression": [
+      "let",
+      "    Source = AmazonAthena.Databases(\"Amazon Athena\", null, []),",
+      "    AwsDataCatalog_Database = Source{[Name=\"AwsDataCatalog\",Kind=\"Database\"]}[Data],",
+      "    #\"oruc-db_Schema\" = AwsDataCatalog_Database{[Name=\"oruc-db\",Kind=\"Schema\"]}[Data],",
+      "    fact_popularity_Table = #\"oruc-db_Schema\"{[Name=\"fact_popularity\",Kind=\"Table\"]}[Data],",
+      "    #\"Changed Type\" = Table.TransformColumnTypes(fact_popularity_Table,{{\"loaddate\", type date}}),",
+      "    #\"Renamed Columns\" = Table.RenameColumns(#\"Changed Type\",{{\"popularity\", \"Popularity\"}, {\"rank\", \"Rank\"}, {\"rank_change\", \"Rank Change\"}})",
+      "in",
+      "    #\"Renamed Columns\""
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "calculatedTableColumn",
+  "name": "MonthName",
+  "dataType": "string",
+  "isNameInferred": true,
+  "isDataTypeInferred": true,
+  "sourceColumn": "[MonthName]",
+  "lineageTag": "930f2604-0257-450b-b597-8839d281077d",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

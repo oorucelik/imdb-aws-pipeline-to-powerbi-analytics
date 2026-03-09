@@ -1,0 +1,14 @@
+{
+  "name": "Episode No",
+  "dataType": "int64",
+  "sourceColumn": "Episode No",
+  "formatString": "0",
+  "lineageTag": "fb04fc0c-0d10-4f8d-9172-354adae71c19",
+  "summarizeBy": "sum",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

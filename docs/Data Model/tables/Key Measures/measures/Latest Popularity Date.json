@@ -1,0 +1,19 @@
+{
+  "name": "Latest Popularity Date",
+  "expression": [
+    "",
+    "CALCULATE(",
+    "    MAX(fact_popularity[loaddate]),",
+    "    ALL(fact_popularity)",
+    ")"
+  ],
+  "formatString": "dd/mm/yyyy",
+  "displayFolder": "Dates",
+  "lineageTag": "5e53b9cf-a756-4854-8337-171fd3c1fab1",
+  "annotations": [
+    {
+      "name": "PBI_FormatHint",
+      "value": "{\"isDateTimeCustom\":true}"
+    }
+  ]
+}

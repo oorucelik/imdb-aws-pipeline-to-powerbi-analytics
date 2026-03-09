@@ -1,0 +1,14 @@
+{
+  "name": "order_no",
+  "dataType": "int64",
+  "sourceColumn": "order_no",
+  "formatString": "0",
+  "lineageTag": "85ab4fa8-a5d8-4785-ae63-ce800dc307b4",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

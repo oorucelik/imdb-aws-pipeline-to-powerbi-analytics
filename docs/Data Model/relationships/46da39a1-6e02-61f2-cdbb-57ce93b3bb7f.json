@@ -1,0 +1,9 @@
+{
+  "name": "46da39a1-6e02-61f2-cdbb-57ce93b3bb7f",
+  "fromTable": "fact_popularity",
+  "fromColumn": "loaddate",
+  "toTable": "DateTable",
+  "toColumn": "Date",
+  "crossFilteringBehavior": "bothDirections",
+  "securityFilteringBehavior": "bothDirections"
+}

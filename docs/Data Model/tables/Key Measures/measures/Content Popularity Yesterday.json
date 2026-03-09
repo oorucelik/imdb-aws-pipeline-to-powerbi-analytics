@@ -1,0 +1,31 @@
+{
+  "name": "Content Popularity Yesterday",
+  "expression": [
+    "",
+    "VAR latestDate =",
+    " CALCULATE(",
+    "    MAX(fact_popularity[loaddate]),",
+    "    ALL(fact_popularity)",
+    ")",
+    "VAR yesterdayDate = ",
+    "CALCULATE(",
+    "    MAX(fact_popularity[loaddate]),",
+    "    fact_popularity[loaddate]<latestDate",
+    ")",
+    "",
+    "RETURN ",
+    "CALCULATE(",
+    "    MAX(fact_popularity[Popularity]),",
+    "    fact_popularity[loaddate]= yesterdayDate,",
+    "    ALLEXCEPT(dim_content,dim_content[content_id],dim_content[Title])   ",
+    ")"
+  ],
+  "displayFolder": "Time Intelligence",
+  "lineageTag": "2e0fcbc3-03cf-4fdc-ac58-df9626dea30d",
+  "annotations": [
+    {
+      "name": "PBI_FormatHint",
+      "value": "{\"isGeneralNumber\":true}"
+    }
+  ]
+}

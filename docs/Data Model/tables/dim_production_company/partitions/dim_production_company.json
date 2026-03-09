@@ -1,0 +1,17 @@
+{
+  "name": "dim_production_company",
+  "mode": "import",
+  "source": {
+    "type": "m",
+    "expression": [
+      "let",
+      "    Source = AmazonAthena.Databases(\"Amazon Athena\", null, []),",
+      "    AwsDataCatalog_Database = Source{[Name=\"AwsDataCatalog\",Kind=\"Database\"]}[Data],",
+      "    #\"oruc-db_Schema\" = AwsDataCatalog_Database{[Name=\"oruc-db\",Kind=\"Schema\"]}[Data],",
+      "    dim_production_company_Table = #\"oruc-db_Schema\"{[Name=\"dim_production_company\",Kind=\"Table\"]}[Data],",
+      "    #\"Renamed Columns\" = Table.RenameColumns(dim_production_company_Table,{{\"company_name\", \"Prod. Companies\"}, {\"company_poster\", \"Poster\"}})",
+      "in",
+      "    #\"Renamed Columns\""
+    ]
+  }
+}

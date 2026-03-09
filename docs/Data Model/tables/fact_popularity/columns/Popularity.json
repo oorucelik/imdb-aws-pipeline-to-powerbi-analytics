@@ -1,0 +1,14 @@
+{
+  "name": "Popularity",
+  "dataType": "double",
+  "sourceColumn": "Popularity",
+  "formatString": "0",
+  "lineageTag": "c02d941e-717c-4e11-8c6f-8f4b9f668876",
+  "summarizeBy": "sum",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

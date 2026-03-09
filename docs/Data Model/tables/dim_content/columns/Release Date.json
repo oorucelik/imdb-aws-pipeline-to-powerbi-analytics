@@ -1,0 +1,34 @@
+{
+  "name": "Release Date",
+  "dataType": "dateTime",
+  "description": "Release Date",
+  "sourceColumn": "Release Date",
+  "formatString": "dd/mm/yyyy",
+  "lineageTag": "6c4dc8e9-dfcd-4c0a-a9fc-05bc027f1e6a",
+  "summarizeBy": "none",
+  "variations": [
+    {
+      "name": "Variation",
+      "relationship": "f88da52b-e7b0-40ae-845f-0289aefe7331",
+      "defaultHierarchy": {
+        "table": "LocalDateTable_381e6972-092b-4886-93b6-985753040bbe",
+        "hierarchy": "Date Hierarchy"
+      },
+      "isDefault": true
+    }
+  ],
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    },
+    {
+      "name": "UnderlyingDateTimeDataType",
+      "value": "Date"
+    },
+    {
+      "name": "PBI_FormatHint",
+      "value": "{\"isDateTimeCustom\":true}"
+    }
+  ]
+}

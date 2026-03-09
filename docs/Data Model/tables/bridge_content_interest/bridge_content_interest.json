@@ -1,0 +1,10 @@
+{
+  "name": "bridge_content_interest",
+  "lineageTag": "b550ce27-fed1-42e3-b8e6-185ec099e047",
+  "annotations": [
+    {
+      "name": "PBI_ResultType",
+      "value": "Table"
+    }
+  ]
+}

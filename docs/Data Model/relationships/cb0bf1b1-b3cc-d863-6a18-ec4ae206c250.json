@@ -1,0 +1,8 @@
+{
+  "name": "cb0bf1b1-b3cc-d863-6a18-ec4ae206c250",
+  "fromTable": "bridge_content_person",
+  "fromColumn": "content_id",
+  "toTable": "dim_content",
+  "toColumn": "content_id",
+  "crossFilteringBehavior": "bothDirections"
+}

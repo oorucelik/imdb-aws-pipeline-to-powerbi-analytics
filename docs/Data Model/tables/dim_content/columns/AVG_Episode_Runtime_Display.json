@@ -1,0 +1,41 @@
+{
+  "type": "calculated",
+  "name": "AVG_Episode_Runtime_Display",
+  "dataType": "string",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "VAR totalRuntime = CALCULATE(SUM(dim_episode[Runtime (Min.)]))",
+    "VAR totalEpisodes = CALCULATE(",
+    "    DISTINCTCOUNT(dim_episode[episode_key]),",
+    "    NOT(ISBLANK(dim_episode[Runtime (Min.)]))",
+    ")",
+    "VAR avgRuntime = ROUND(DIVIDE(totalRuntime,totalEpisodes),0)",
+    "--for display",
+    "VAR totalHours = QUOTIENT(avgRuntime,60)",
+    "VAR totalMinutes = MOD(avgRuntime,60)",
+    "RETURN ",
+    "    SWITCH(",
+    "        TRUE(),",
+    "        ISBLANK(avgRuntime) || totalEpisodes = 0 ,\"-\",",
+    "        totalHours=0,totalMinutes & \"m\",",
+    "        totalMinutes=0,totalHours & \"h\",",
+    "        totalHours & \"h \" & totalMinutes & \"m\"",
+    "    )",
+    "        "
+  ],
+  "sortByColumn": "AVG_Episode_Runtime",
+  "lineageTag": "797227e7-0338-42cd-bf9b-4a71f3229057",
+  "summarizeBy": "none",
+  "changedProperties": [
+    {
+      "property": "SortByColumn"
+    }
+  ],
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

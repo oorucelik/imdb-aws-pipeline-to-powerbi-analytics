@@ -1,0 +1,8 @@
+{
+  "name": "d170820d-b9e9-484b-a304-92d79af1dfee",
+  "fromTable": "dim_season",
+  "fromColumn": "Air Date",
+  "toTable": "LocalDateTable_9241dbac-602c-4eb6-a546-4b0cfe0f93a1",
+  "toColumn": "Date",
+  "joinOnDateBehavior": "datePartOnly"
+}

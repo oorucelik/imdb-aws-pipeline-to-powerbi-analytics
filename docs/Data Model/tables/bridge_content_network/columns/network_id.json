@@ -1,0 +1,14 @@
+{
+  "name": "network_id",
+  "dataType": "int64",
+  "sourceColumn": "network_id",
+  "formatString": "0",
+  "lineageTag": "c34fd25d-7e10-4a85-ac5e-b0f1ff063692",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

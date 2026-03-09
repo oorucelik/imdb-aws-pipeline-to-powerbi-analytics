@@ -1,0 +1,28 @@
+{
+  "type": "calculatedTableColumn",
+  "name": "Date",
+  "dataType": "dateTime",
+  "isNameInferred": true,
+  "isDataTypeInferred": true,
+  "sourceColumn": "[Date]",
+  "formatString": "General Date",
+  "lineageTag": "ed825a54-211d-46e3-97c0-7502bd7a6e1c",
+  "summarizeBy": "none",
+  "variations": [
+    {
+      "name": "Variation",
+      "relationship": "77eb440d-4d0e-4391-b0a3-df0a56eb340f",
+      "defaultHierarchy": {
+        "table": "LocalDateTable_fa709b30-2865-4813-a492-7f319db87f3a",
+        "hierarchy": "Date Hierarchy"
+      },
+      "isDefault": true
+    }
+  ],
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

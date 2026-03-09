@@ -1,0 +1,7 @@
+{
+  "name": "Total Runtime Series",
+  "expression": "SUM(dim_episode[Runtime (Min.)])",
+  "formatString": "0",
+  "displayFolder": "Aggregations",
+  "lineageTag": "2550541c-0323-4e4c-81e5-538b19f3f55d"
+}

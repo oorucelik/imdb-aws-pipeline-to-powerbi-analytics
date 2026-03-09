@@ -1,0 +1,7 @@
+{
+  "name": "Avg Series Score",
+  "expression": "ROUND(DIVIDE(SUM(dim_episode[Score]),COUNT(dim_episode[Score])),1)",
+  "formatString": "0.0",
+  "displayFolder": "Aggregations",
+  "lineageTag": "e4e48244-572a-4828-857d-815f3a2b9805"
+}

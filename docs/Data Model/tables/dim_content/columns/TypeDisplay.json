@@ -1,0 +1,20 @@
+{
+  "type": "calculated",
+  "name": "TypeDisplay",
+  "dataType": "string",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "VAR contentType = UPPER(dim_content[Type])",
+    "RETURN IF(CONTAINSSTRING(contentType,\"MOVIE\"),\"Movie\",\"TV-Series\")",
+    ""
+  ],
+  "lineageTag": "fd1fde23-8e2a-4950-9295-9fec0480f403",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

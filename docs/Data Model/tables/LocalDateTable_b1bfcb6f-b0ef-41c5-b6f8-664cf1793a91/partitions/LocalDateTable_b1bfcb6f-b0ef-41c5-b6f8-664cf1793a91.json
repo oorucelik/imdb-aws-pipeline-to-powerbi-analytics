@@ -1,0 +1,8 @@
+{
+  "name": "LocalDateTable_b1bfcb6f-b0ef-41c5-b6f8-664cf1793a91",
+  "mode": "import",
+  "source": {
+    "type": "calculated",
+    "expression": "Calendar(Date(Year(MIN('dim_episode'[Air Date])), 1, 1), Date(Year(MAX('dim_episode'[Air Date])), 12, 31))"
+  }
+}

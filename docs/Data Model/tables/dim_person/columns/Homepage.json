@@ -1,0 +1,14 @@
+{
+  "name": "Homepage",
+  "dataType": "string",
+  "sourceColumn": "Homepage",
+  "lineageTag": "edcf58cb-4128-41d1-8936-856920527af6",
+  "dataCategory": "WebUrl",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

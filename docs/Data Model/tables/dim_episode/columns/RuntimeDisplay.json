@@ -1,0 +1,28 @@
+{
+  "type": "calculated",
+  "name": "RuntimeDisplay",
+  "dataType": "string",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "VAR TotalMinutes = dim_episode[Runtime (Min.)]",
+    "VAR Hours = QUOTIENT(TotalMinutes,60)",
+    "VAR Minutes = MOD(TotalMinutes,60)",
+    "RETURN ",
+    "    SWITCH(",
+    "        TRUE(),",
+    "        ISBLANK(TotalMinutes),\"-\", ",
+    "        Hours=0,Minutes & \"m\",",
+    "        Minutes=0,Hours & \"h\",",
+    "        Hours & \"h \" & Minutes & \"m\"",
+    "    )"
+  ],
+  "lineageTag": "4a842911-5bf7-4e4d-9347-db40eea13212",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

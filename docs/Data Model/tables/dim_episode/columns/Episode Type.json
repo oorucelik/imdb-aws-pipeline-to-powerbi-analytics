@@ -1,0 +1,13 @@
+{
+  "name": "Episode Type",
+  "dataType": "string",
+  "sourceColumn": "Episode Type",
+  "lineageTag": "13bc8ad8-ece9-4a44-8b8c-911476bb4f5e",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

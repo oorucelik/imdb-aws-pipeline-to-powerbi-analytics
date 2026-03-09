@@ -1,0 +1,16 @@
+{
+  "name": "Total Vote Episode",
+  "expression": "SUM(dim_episode[Total Vote])",
+  "displayFolder": "Aggregations",
+  "lineageTag": "dcf3626e-070e-4ce4-84f3-0e08458fa7f5",
+  "formatStringDefinition": {
+    "expression": [
+      "SWITCH(",
+      "    TRUE(),",
+      "    SELECTEDMEASURE() >=1000000, \"#,.0,, M\",",
+      "    SELECTEDMEASURE() >=1000, \"#,.0 K\",",
+      "    \"#,0\"",
+      ")"
+    ]
+  }
+}

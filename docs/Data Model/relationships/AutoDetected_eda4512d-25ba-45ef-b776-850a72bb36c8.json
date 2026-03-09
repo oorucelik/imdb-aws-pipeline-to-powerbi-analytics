@@ -1,0 +1,8 @@
+{
+  "name": "AutoDetected_eda4512d-25ba-45ef-b776-850a72bb36c8",
+  "fromTable": "fact_popularity",
+  "fromColumn": "content_id",
+  "toTable": "dim_content",
+  "toColumn": "content_id",
+  "crossFilteringBehavior": "bothDirections"
+}

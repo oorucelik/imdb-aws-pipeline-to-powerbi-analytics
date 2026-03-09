@@ -1,0 +1,33 @@
+{
+  "name": "Air Date",
+  "dataType": "dateTime",
+  "sourceColumn": "Air Date",
+  "formatString": "dd/mm/yyyy",
+  "lineageTag": "ea4529c5-ca0f-4bfb-9717-7b745f7a4101",
+  "summarizeBy": "none",
+  "variations": [
+    {
+      "name": "Variation",
+      "relationship": "d170820d-b9e9-484b-a304-92d79af1dfee",
+      "defaultHierarchy": {
+        "table": "LocalDateTable_9241dbac-602c-4eb6-a546-4b0cfe0f93a1",
+        "hierarchy": "Date Hierarchy"
+      },
+      "isDefault": true
+    }
+  ],
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    },
+    {
+      "name": "UnderlyingDateTimeDataType",
+      "value": "Date"
+    },
+    {
+      "name": "PBI_FormatHint",
+      "value": "{\"isDateTimeCustom\":true}"
+    }
+  ]
+}

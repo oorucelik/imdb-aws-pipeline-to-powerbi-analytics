@@ -1,0 +1,19 @@
+{
+  "name": "Total Budget",
+  "expression": "SUM(dim_content[Budget])",
+  "displayFolder": "Aggregations",
+  "lineageTag": "f0c9b503-86d7-42d2-9486-7cbe5a51f0d8",
+  "formatStringDefinition": {
+    "expression": [
+      "VAR totalBudget = SUM(dim_content[Budget])",
+      "RETURN",
+      "    SWITCH(",
+      "        TRUE(),",
+      "        totalBudget<1000,\"$0\",",
+      "        totalBudget<1000000,\"$#,.0K\",",
+      "        totalBudget<1000000000,\"$#,,.0M\",",
+      "        totalBudget>1000000000,\"$#,,,.0B\"",
+      "    )"
+    ]
+  }
+}

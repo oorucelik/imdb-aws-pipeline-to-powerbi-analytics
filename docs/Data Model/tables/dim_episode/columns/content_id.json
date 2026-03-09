@@ -1,0 +1,13 @@
+{
+  "name": "content_id",
+  "dataType": "string",
+  "sourceColumn": "content_id",
+  "lineageTag": "87f0dc2a-fb1d-44c8-b015-766efbac27ad",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

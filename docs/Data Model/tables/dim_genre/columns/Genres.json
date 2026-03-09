@@ -1,0 +1,13 @@
+{
+  "name": "Genres",
+  "dataType": "string",
+  "sourceColumn": "Genres",
+  "lineageTag": "53d9d36a-48a7-4432-8feb-1e1b5667a6ca",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

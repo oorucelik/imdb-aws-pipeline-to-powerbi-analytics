@@ -1,0 +1,21 @@
+{
+  "name": "Max Popularity Today",
+  "expression": [
+    "",
+    "VAR latestDate = [Latest Popularity Date]",
+    "RETURN ",
+    "CALCULATE(",
+    "    MAX(fact_popularity[Popularity]),",
+    "    fact_popularity[loaddate]= latestDate,",
+    "    REMOVEFILTERS(dim_content)   ",
+    ")"
+  ],
+  "displayFolder": "Time Intelligence",
+  "lineageTag": "60b02b34-abd8-4714-b14f-855054607e36",
+  "annotations": [
+    {
+      "name": "PBI_FormatHint",
+      "value": "{\"isGeneralNumber\":true}"
+    }
+  ]
+}

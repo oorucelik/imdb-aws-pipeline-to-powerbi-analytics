@@ -1,0 +1,7 @@
+{
+  "name": "ROI",
+  "expression": "DIVIDE(SUM(dim_content[Revenue])-SUM(dim_content[Budget]),SUM(dim_content[Budget]))",
+  "formatString": "0.00",
+  "displayFolder": "KPIs",
+  "lineageTag": "ca389128-a5cf-409c-9de0-a8884ee79e6e"
+}

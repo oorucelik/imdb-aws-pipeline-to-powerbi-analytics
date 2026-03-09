@@ -1,0 +1,8 @@
+{
+  "name": "LocalDateTable_fa709b30-2865-4813-a492-7f319db87f3a",
+  "mode": "import",
+  "source": {
+    "type": "calculated",
+    "expression": "Calendar(Date(Year(MIN('DateTable'[Date])), 1, 1), Date(Year(MAX('DateTable'[Date])), 12, 31))"
+  }
+}

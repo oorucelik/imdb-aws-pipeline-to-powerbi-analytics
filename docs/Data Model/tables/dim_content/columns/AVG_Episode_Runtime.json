@@ -1,0 +1,29 @@
+{
+  "type": "calculated",
+  "name": "AVG_Episode_Runtime",
+  "dataType": "double",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "VAR totalRuntime = ",
+    "CALCULATE(",
+    "    SUM(dim_episode[Runtime (Min.)]),",
+    "    NOT(ISBLANK(dim_episode[Runtime (Min.)]))",
+    "    )",
+    "VAR totalEpisodes = ",
+    "CALCULATE(",
+    "    DISTINCTCOUNT(dim_episode[episode_key]),",
+    "    NOT(ISBLANK(dim_episode[Runtime (Min.)]))",
+    ")",
+    "RETURN ROUND(DIVIDE(totalRuntime,totalEpisodes),0)"
+  ],
+  "formatString": "0",
+  "lineageTag": "9c20561f-5d61-41ff-a2be-2b54ed5cc18b",
+  "summarizeBy": "sum",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

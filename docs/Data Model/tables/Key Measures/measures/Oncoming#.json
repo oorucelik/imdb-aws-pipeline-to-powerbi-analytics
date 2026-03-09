@@ -1,0 +1,15 @@
+{
+  "name": "Oncoming#",
+  "expression": [
+    "",
+    "VAR latestDate = [Latest Popularity Date]",
+    "VAR val = CALCULATE(",
+    "    DISTINCTCOUNT(dim_content[content_id]),",
+    "    dim_content[Release Date]> latestDate",
+    "    )",
+    "RETURN IF(ISBLANK(val),0,val)"
+  ],
+  "formatString": "0",
+  "displayFolder": "KPIs",
+  "lineageTag": "d312728a-2ce3-4aed-8377-5f8320e9903c"
+}

@@ -1,0 +1,31 @@
+{
+  "name": "IMDB-TMDB Popular Analysis Dashboard",
+  "compatibilityLevel": 1601,
+  "model": {
+    "culture": "en-US",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-150",
+    "annotations": [
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "1"
+      },
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"bridge_content_company\",\"bridge_content_genre\",\"bridge_content_interest\",\"bridge_content_network\",\"bridge_content_person\",\"dim_content\",\"dim_episode\",\"dim_genre\",\"dim_interest\",\"dim_network\",\"dim_person\",\"dim_production_company\",\"dim_season\",\"fact_popularity\",\"Key Measures\"]"
+      },
+      {
+        "name": "PBI_ProTooling",
+        "value": "[\"TMDLView_Desktop\",\"DaxQueryView_Desktop\"]"
+      },
+      {
+        "name": "TabularEditor_SerializeOptions",
+        "value": "{\"IgnoreInferredObjects\":true,\"IgnoreInferredProperties\":true,\"IgnoreTimestamps\":true,\"SplitMultilineStrings\":true,\"PrefixFilenames\":false,\"LocalTranslations\":false,\"LocalPerspectives\":false,\"SortArrays\":false,\"LocalRelationships\":false,\"Levels\":[\"Data Sources\",\"Shared Expressions\",\"Perspectives\",\"Relationships\",\"Roles\",\"Tables\",\"Tables/Columns\",\"Tables/Hierarchies\",\"Tables/Measures\",\"Tables/Partitions\",\"Tables/Calculation Items\",\"Translations\"]}"
+      }
+    ]
+  }
+}

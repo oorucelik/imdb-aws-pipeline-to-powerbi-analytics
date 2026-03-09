@@ -1,0 +1,14 @@
+{
+  "name": "Total Vote",
+  "dataType": "int64",
+  "sourceColumn": "Total Vote",
+  "formatString": "#,0",
+  "lineageTag": "ef9cdf09-f5ae-412b-b5f5-a6d50857a06a",
+  "summarizeBy": "sum",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

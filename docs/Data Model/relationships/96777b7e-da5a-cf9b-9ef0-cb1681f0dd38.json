@@ -1,0 +1,8 @@
+{
+  "name": "96777b7e-da5a-cf9b-9ef0-cb1681f0dd38",
+  "fromTable": "bridge_content_company",
+  "fromColumn": "company_id",
+  "toTable": "dim_production_company",
+  "toColumn": "company_id",
+  "crossFilteringBehavior": "bothDirections"
+}

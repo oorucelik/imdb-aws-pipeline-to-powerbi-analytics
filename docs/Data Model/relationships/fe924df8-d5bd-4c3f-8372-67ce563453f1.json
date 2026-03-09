@@ -1,0 +1,8 @@
+{
+  "name": "fe924df8-d5bd-4c3f-8372-67ce563453f1",
+  "fromTable": "dim_episode",
+  "fromColumn": "Air Date",
+  "toTable": "LocalDateTable_b1bfcb6f-b0ef-41c5-b6f8-664cf1793a91",
+  "toColumn": "Date",
+  "joinOnDateBehavior": "datePartOnly"
+}

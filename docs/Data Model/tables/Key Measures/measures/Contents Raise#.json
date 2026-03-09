@@ -1,0 +1,15 @@
+{
+  "name": "Contents Raise#",
+  "expression": [
+    "VAR latestDate = [Latest Popularity Date]",
+    "RETURN",
+    "CALCULATE(",
+    "    COUNTROWS(dim_content),",
+    "    fact_popularity[loaddate] = latestDate,",
+    "    fact_popularity[Rank Change] < 0  ",
+    ")"
+  ],
+  "formatString": "0",
+  "displayFolder": "KPIs",
+  "lineageTag": "42dd0eec-6539-4b8d-8c5c-8ef8ad33ae74"
+}

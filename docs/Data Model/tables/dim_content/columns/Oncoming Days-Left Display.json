@@ -1,0 +1,44 @@
+{
+  "type": "calculated",
+  "name": "Oncoming Days-Left Display",
+  "dataType": "string",
+  "expression": [
+    "",
+    "VAR EndDate  = CALCULATE(FIRSTDATE(dim_content[Release Date]))",
+    "VAR StartDate = [Latest Popularity Date]",
+    "",
+    "",
+    "-- Yıl farkı",
+    "VAR TotalYears = DATEDIFF(StartDate, EndDate, YEAR) - ",
+    "                 IF(DATE(YEAR(EndDate), MONTH(StartDate), DAY(StartDate)) > EndDate, 1, 0) ",
+    "",
+    "-- Ay farkı",
+    "VAR TotalMonths = MOD(MONTH(EndDate) - MONTH(StartDate) + 12 - ",
+    "                  IF(DAY(EndDate) < DAY(StartDate), 1, 0), 12)",
+    "",
+    "-- Gün farkı (Burası kritik: Sonucu sayıya zorluyoruz)",
+    "VAR TotalDays = INT(EndDate - EDATE(StartDate, TotalYears * 12 + TotalMonths))",
+    "",
+    "-- Metin Parçaları",
+    "VAR YearText = IF(TotalYears > 0, TotalYears & \" yrs \", \"\")",
+    "VAR MonthText = IF(TotalMonths > 0, TotalMonths & \" mths \", \"\")",
+    "VAR DayText = IF(TotalDays > 0, TotalDays & \" days\", \"\")",
+    "",
+    "VAR CombinedText = TRIM(YearText & MonthText & DayText)",
+    "",
+    "RETURN IF(CombinedText = \"\", \"Same Day\", CombinedText)"
+  ],
+  "lineageTag": "47d58b55-9639-42bb-8b05-15ab4c3da39a",
+  "summarizeBy": "none",
+  "changedProperties": [
+    {
+      "property": "DataType"
+    }
+  ],
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

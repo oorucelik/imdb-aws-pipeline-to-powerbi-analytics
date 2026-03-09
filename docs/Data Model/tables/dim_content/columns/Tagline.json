@@ -1,0 +1,13 @@
+{
+  "name": "Tagline",
+  "dataType": "string",
+  "sourceColumn": "Tagline",
+  "lineageTag": "9006ffc8-04a0-47f8-8bc6-d5269d521412",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

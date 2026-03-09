@@ -1,0 +1,18 @@
+{
+  "name": "dim_season",
+  "mode": "import",
+  "source": {
+    "type": "m",
+    "expression": [
+      "let",
+      "    Source = AmazonAthena.Databases(\"Amazon Athena\", null, []),",
+      "    AwsDataCatalog_Database = Source{[Name=\"AwsDataCatalog\",Kind=\"Database\"]}[Data],",
+      "    #\"oruc-db_Schema\" = AwsDataCatalog_Database{[Name=\"oruc-db\",Kind=\"Schema\"]}[Data],",
+      "    dim_season_Table = #\"oruc-db_Schema\"{[Name=\"dim_season\",Kind=\"Table\"]}[Data],",
+      "    #\"Changed Type\" = Table.TransformColumnTypes(dim_season_Table,{{\"air_date\", type date}}),",
+      "    #\"Renamed Columns\" = Table.RenameColumns(#\"Changed Type\",{{\"air_date\", \"Air Date\"}, {\"episode_count\", \"Total Episodes\"}, {\"name\", \"Name\"}, {\"overview\", \"Overview\"}, {\"poster_path\", \"Poster\"}, {\"season_number\", \"Season No.\"}})",
+      "in",
+      "    #\"Renamed Columns\""
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Global Reach#",
+  "expression": [
+    "",
+    "VAR val = CALCULATE(",
+    "    DISTINCTCOUNT(dim_content[content_id]),",
+    "    dim_content[Revenue]>=500000000",
+    ")",
+    "RETURN IF(ISBLANK(val),0,val)"
+  ],
+  "formatString": "0",
+  "displayFolder": "KPIs",
+  "lineageTag": "55695dfe-9dac-42ee-816e-ea81756accc7"
+}

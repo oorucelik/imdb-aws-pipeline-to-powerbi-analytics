@@ -1,0 +1,14 @@
+{
+  "name": "Score",
+  "dataType": "double",
+  "sourceColumn": "Score",
+  "formatString": "0.0",
+  "lineageTag": "0fcf7c38-f10b-405f-ac2c-b16f485dba6d",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

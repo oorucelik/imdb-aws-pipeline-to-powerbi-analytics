@@ -1,0 +1,15 @@
+{
+  "name": "Rank Change Today",
+  "expression": [
+    "",
+    "VAR latestDate = [Latest Popularity Date]",
+    "RETURN",
+    "    CALCULATE(",
+    "        SUM(fact_popularity[Rank Change]),",
+    "        fact_popularity[loaddate]=latestDate",
+    "    )"
+  ],
+  "formatString": "0",
+  "displayFolder": "Time Intelligence",
+  "lineageTag": "81164d8c-1673-4e10-b31c-9d5fa2dae4bd"
+}

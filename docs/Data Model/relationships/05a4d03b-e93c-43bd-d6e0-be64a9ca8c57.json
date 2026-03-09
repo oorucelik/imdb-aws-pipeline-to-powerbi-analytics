@@ -1,0 +1,7 @@
+{
+  "name": "05a4d03b-e93c-43bd-d6e0-be64a9ca8c57",
+  "fromTable": "bridge_content_genre",
+  "fromColumn": "genre_name",
+  "toTable": "dim_genre",
+  "toColumn": "Genres"
+}

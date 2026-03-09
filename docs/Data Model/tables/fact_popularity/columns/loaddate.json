@@ -1,0 +1,22 @@
+{
+  "name": "loaddate",
+  "dataType": "dateTime",
+  "sourceColumn": "loaddate",
+  "formatString": "d.mm.yyyy",
+  "lineageTag": "d9ce68fc-30ed-43b7-91be-89b23ef89ef2",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    },
+    {
+      "name": "UnderlyingDateTimeDataType",
+      "value": "Date"
+    },
+    {
+      "name": "PBI_FormatHint",
+      "value": "{\"isDateTimeCustom\":true}"
+    }
+  ]
+}

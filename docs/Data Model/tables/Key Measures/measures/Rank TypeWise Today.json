@@ -1,0 +1,32 @@
+{
+  "name": "Rank TypeWise Today",
+  "expression": [
+    "",
+    "VAR LatestDate = [Latest Popularity Date]",
+    "VAR CurrentContentID = SELECTEDVALUE(dim_content[content_id])",
+    "VAR CurrentType = SELECTEDVALUE(dim_content[TypeDisplay])",
+    "VAR CurrentPopularity = ",
+    "    CALCULATE(",
+    "        VALUES(fact_popularity[popularity]),",
+    "        fact_popularity[loaddate] = LatestDate",
+    "    )",
+    "",
+    "RETURN",
+    "IF(",
+    "    NOT ISBLANK(CurrentContentID),",
+    "    1 + CALCULATE(",
+    "            COUNTROWS(fact_popularity),",
+    "            fact_popularity[loaddate] = LatestDate,",
+    "            fact_popularity[popularity] > CurrentPopularity,",
+    "            TREATAS(VALUES(dim_content[TypeDisplay]), dim_content[TypeDisplay]),",
+    "            ALL(dim_content),",
+    "            ALL(fact_popularity)",
+    "    ),",
+    "    BLANK()",
+    ")",
+    ""
+  ],
+  "formatString": "0",
+  "displayFolder": "Time Intelligence",
+  "lineageTag": "fe26fa26-be1a-40df-ba7d-0d7698d1c927"
+}

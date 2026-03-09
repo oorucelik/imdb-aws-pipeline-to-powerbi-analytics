@@ -1,0 +1,36 @@
+{
+  "type": "calculated",
+  "name": "TypeDisplay",
+  "dataType": "string",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "VAR episodeType = [Episode Type]",
+    "VAR contentStatus = RELATED(dim_content[Status])",
+    "VAR currentContentID = [content_id]",
+    "VAR currentSeasonNo = dim_episode[Season No.]",
+    "VAR lastSeasonNo = ",
+    "    CALCULATE(",
+    "        MAX(dim_episode[Season No.]),",
+    "        ALLEXCEPT(dim_episode,dim_episode[content_id])",
+    "    )",
+    "RETURN",
+    "    SWITCH(",
+    "        TRUE(),",
+    "        ISBLANK(episodeType),\"-\",",
+    "        episodeType=\"standard\",\"Normal\",",
+    "        episodeType=\"mid_season\",\"Mid-Season\",",
+    "        episodeType=\"finale\" && contentStatus=\"Ended\" && lastSeasonNo=currentSeasonNo ,\"Final\", --If content has ended, episode type is 'finale', season number = latest aired season than, Final episode of the show ",
+    "        episodeType=\"finale\",\"Season Final\"",
+    "    )",
+    ""
+  ],
+  "lineageTag": "8bf09ca7-890c-4e23-8b96-f61303b00857",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

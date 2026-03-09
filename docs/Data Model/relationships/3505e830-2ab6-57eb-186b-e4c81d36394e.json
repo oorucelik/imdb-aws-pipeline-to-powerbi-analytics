@@ -1,0 +1,7 @@
+{
+  "name": "3505e830-2ab6-57eb-186b-e4c81d36394e",
+  "fromTable": "dim_season",
+  "fromColumn": "content_id",
+  "toTable": "dim_content",
+  "toColumn": "content_id"
+}

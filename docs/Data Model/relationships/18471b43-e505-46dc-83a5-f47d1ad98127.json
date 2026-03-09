@@ -1,0 +1,8 @@
+{
+  "name": "18471b43-e505-46dc-83a5-f47d1ad98127",
+  "fromTable": "dim_content",
+  "fromColumn": "created_at",
+  "toTable": "LocalDateTable_b47a242a-606b-47f9-b1c9-a28f3be17485",
+  "toColumn": "Date",
+  "joinOnDateBehavior": "datePartOnly"
+}

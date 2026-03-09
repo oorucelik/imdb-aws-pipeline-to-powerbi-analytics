@@ -1,0 +1,31 @@
+{
+  "name": "updated_at",
+  "dataType": "dateTime",
+  "isHidden": true,
+  "sourceColumn": "updated_at",
+  "formatString": "General Date",
+  "lineageTag": "32432223-70eb-4452-bd3a-21d965bcd528",
+  "summarizeBy": "none",
+  "variations": [
+    {
+      "name": "Variation",
+      "relationship": "693d0fd3-7530-4493-a81d-bd002c2a3a29",
+      "defaultHierarchy": {
+        "table": "LocalDateTable_b257ed04-47c4-412f-a488-4238e6401bbd",
+        "hierarchy": "Date Hierarchy"
+      },
+      "isDefault": true
+    }
+  ],
+  "changedProperties": [
+    {
+      "property": "IsHidden"
+    }
+  ],
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

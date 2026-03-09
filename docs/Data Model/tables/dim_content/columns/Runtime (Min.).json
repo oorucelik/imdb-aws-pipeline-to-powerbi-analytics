@@ -1,0 +1,14 @@
+{
+  "name": "Runtime (Min.)",
+  "dataType": "int64",
+  "sourceColumn": "Runtime (Min.)",
+  "formatString": "0",
+  "lineageTag": "9c8ffcfb-eae9-4fea-8238-80a0b4b73737",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "type": "calculated",
+  "name": "Production Companies",
+  "dataType": "string",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "VAR _bridgeRows = ",
+    "    RELATEDTABLE( bridge_content_company )",
+    "",
+    "VAR _companyIDs =",
+    "    SELECTCOLUMNS( ",
+    "        _bridgeRows, ",
+    "        \"@nid\", bridge_content_company[company_id] ",
+    "    )",
+    "",
+    "VAR _companiesWithCount =",
+    "    ADDCOLUMNS(",
+    "        DISTINCT( _companyIDs ),",
+    "        \"@name\",  LOOKUPVALUE( dim_production_company[Prod. Companies],dim_production_company[company_id], [@nid] ),",
+    "        \"@count\", [Prod. Company#]",
+    "    )",
+    "",
+    "VAR _top3 =",
+    "    TOPN( 3, _companiesWithCount, [@count], DESC, [@name], ASC )",
+    "",
+    "RETURN",
+    "    CONCATENATEX( _top3, [@name], \", \", [@count], DESC )"
+  ],
+  "lineageTag": "5fefce4c-716f-4148-9daa-2abc3ece06c9",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

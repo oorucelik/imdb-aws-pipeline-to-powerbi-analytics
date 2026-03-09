@@ -1,0 +1,23 @@
+{
+  "name": "Hidden Gems Rank",
+  "expression": [
+    "",
+    "VAR _Score = SELECTEDVALUE(dim_content[Score])",
+    "RETURN",
+    "IF(",
+    "    _Score >= 7,",
+    "    RANKX(",
+    "        FILTER(",
+    "            ALL(dim_content),",
+    "            dim_content[Score] >= 7",
+    "        ),",
+    "        CALCULATE(SUM(dim_content[Total Vote])),,ASC,DENSE",
+    "    ),",
+    "    BLANK()",
+    ")",
+    ""
+  ],
+  "formatString": "0",
+  "displayFolder": "KPIs",
+  "lineageTag": "c9be055f-de8f-45fb-b38b-546cb26c9aba"
+}

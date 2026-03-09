@@ -1,0 +1,13 @@
+{
+  "name": "Prod. Companies",
+  "dataType": "string",
+  "sourceColumn": "Prod. Companies",
+  "lineageTag": "ca484bf9-4b23-46a1-a68e-722ffb463da1",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

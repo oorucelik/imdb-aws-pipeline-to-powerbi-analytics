@@ -1,0 +1,14 @@
+{
+  "name": "Revenue",
+  "dataType": "int64",
+  "sourceColumn": "Revenue",
+  "formatString": "\\$#,0.###############;(\\$#,0.###############);\\$#,0.###############",
+  "lineageTag": "a90927e8-e973-48b6-803d-058345e1ca10",
+  "summarizeBy": "sum",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

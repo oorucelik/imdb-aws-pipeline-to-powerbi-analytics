@@ -1,0 +1,13 @@
+{
+  "name": "Network#",
+  "expression": [
+    "",
+    "COUNTX(",
+    "    RELATEDTABLE(bridge_content_network),",
+    "    bridge_content_network[network_id]",
+    "    )"
+  ],
+  "formatString": "0",
+  "displayFolder": "Aggregations",
+  "lineageTag": "e2162a22-da98-48e0-a894-270043dd8029"
+}

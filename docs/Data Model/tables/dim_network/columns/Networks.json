@@ -1,0 +1,13 @@
+{
+  "name": "Networks",
+  "dataType": "string",
+  "sourceColumn": "Networks",
+  "lineageTag": "dddae1e1-62fb-486c-a522-9d4dd6c02854",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

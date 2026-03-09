@@ -1,0 +1,30 @@
+{
+  "type": "calculated",
+  "name": "Cast",
+  "dataType": "string",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "CONCATENATEX(",
+    "    TOPN(",
+    "        3,",
+    "        FILTER(",
+    "            RELATEDTABLE(bridge_content_person),",
+    "            NOT(ISBLANK(bridge_content_person[order_no])) &&",
+    "            (bridge_content_person[role_type] = \"Actor\" || bridge_content_person[role_type] = \"Actress\")",
+    "            ),",
+    "        bridge_content_person[order_no], ASC",
+    "    ),",
+    "    RELATED(dim_person[Name]),",
+    "    \", \",bridge_content_person[order_no],ASC",
+    ")"
+  ],
+  "lineageTag": "eb3abca3-9251-497f-9c74-3afb55bc558a",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

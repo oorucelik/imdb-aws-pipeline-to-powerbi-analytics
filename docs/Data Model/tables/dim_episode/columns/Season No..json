@@ -1,0 +1,14 @@
+{
+  "name": "Season No.",
+  "dataType": "int64",
+  "sourceColumn": "Season No.",
+  "formatString": "0",
+  "lineageTag": "1194b224-517e-42bb-82cf-3cd03ab0df46",
+  "summarizeBy": "sum",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}
