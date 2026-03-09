@@ -1,0 +1,13 @@
+{
+  "name": "character_names",
+  "dataType": "string",
+  "sourceColumn": "character_names",
+  "lineageTag": "175e05f1-c4ab-46c7-a915-37437abc6e43",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

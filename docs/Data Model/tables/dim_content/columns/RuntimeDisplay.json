@@ -1,0 +1,34 @@
+{
+  "type": "calculated",
+  "name": "RuntimeDisplay",
+  "dataType": "string",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "VAR TotalMinutes = dim_content[Runtime (Min.)]",
+    "VAR Hours = QUOTIENT(TotalMinutes,60)",
+    "VAR Minutes = MOD(TotalMinutes,60)",
+    "RETURN ",
+    "    SWITCH(",
+    "        TRUE(),",
+    "        ISBLANK(TotalMinutes),\"-\", ",
+    "        Hours=0,Minutes & \"m\",",
+    "        Minutes=0,Hours & \"h\",",
+    "        Hours & \"h \" & Minutes & \"m\"",
+    "    )"
+  ],
+  "sortByColumn": "Runtime (Min.)",
+  "lineageTag": "3c6b882f-1043-4d17-95e2-8c4f44691db9",
+  "summarizeBy": "none",
+  "changedProperties": [
+    {
+      "property": "SortByColumn"
+    }
+  ],
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

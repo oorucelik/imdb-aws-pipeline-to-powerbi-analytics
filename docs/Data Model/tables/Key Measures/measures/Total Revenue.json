@@ -1,0 +1,19 @@
+{
+  "name": "Total Revenue",
+  "expression": "SUM(dim_content[Revenue])",
+  "displayFolder": "Aggregations",
+  "lineageTag": "adca2533-61bc-445d-a3aa-fd41ff680afa",
+  "formatStringDefinition": {
+    "expression": [
+      "VAR totalRev = SUM(dim_content[Revenue])",
+      "RETURN",
+      "    SWITCH(",
+      "        TRUE(),",
+      "        totalRev<1000,\"$0\",",
+      "        totalRev<1000000,\"$#,.0K\",",
+      "        totalRev<1000000000,\"$#,,.0M\",",
+      "        totalRev>1000000000,\"$#,,,.0B\"",
+      "    )"
+    ]
+  }
+}

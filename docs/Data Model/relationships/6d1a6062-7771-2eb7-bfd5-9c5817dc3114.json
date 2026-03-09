@@ -1,0 +1,8 @@
+{
+  "name": "6d1a6062-7771-2eb7-bfd5-9c5817dc3114",
+  "fromTable": "bridge_content_network",
+  "fromColumn": "content_id",
+  "toTable": "dim_content",
+  "toColumn": "content_id",
+  "crossFilteringBehavior": "bothDirections"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Rank",
+  "dataType": "int64",
+  "sourceColumn": "Rank",
+  "formatString": "0",
+  "lineageTag": "b7f5fa51-dcef-45a5-81e3-04e1c3db4945",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

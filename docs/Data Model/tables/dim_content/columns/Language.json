@@ -1,0 +1,13 @@
+{
+  "name": "Language",
+  "dataType": "string",
+  "sourceColumn": "Language",
+  "lineageTag": "dd1098b9-5c15-49b8-9d20-99c8491fa4c7",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

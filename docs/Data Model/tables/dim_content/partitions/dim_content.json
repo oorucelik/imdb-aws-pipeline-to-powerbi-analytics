@@ -1,0 +1,20 @@
+{
+  "name": "dim_content",
+  "mode": "import",
+  "source": {
+    "type": "m",
+    "expression": [
+      "let",
+      "    Source = AmazonAthena.Databases(\"Amazon Athena\", null, []),",
+      "    AwsDataCatalog_Database = Source{[Name=\"AwsDataCatalog\",Kind=\"Database\"]}[Data],",
+      "    #\"oruc-db_Schema\" = AwsDataCatalog_Database{[Name=\"oruc-db\",Kind=\"Schema\"]}[Data],",
+      "    dim_content_Table = #\"oruc-db_Schema\"{[Name=\"dim_content\",Kind=\"Table\"]}[Data],",
+      "    #\"Changed Type\" = Table.TransformColumnTypes(dim_content_Table,{{\"release_date\", type date}}),",
+      "    #\"Renamed Columns\" = Table.RenameColumns(#\"Changed Type\",{{\"average_rating\", \"Score\"}, {\"budget\", \"Budget\"}, {\"content_homepage\", \"Homepage\"}, {\"content_poster\", \"Poster\"}, {\"content_type\", \"Type\"}, {\"original_language\", \"Language\"}, {\"original_title\", \"Original Title\"}, {\"overview\", \"Overview\"}, {\"primary_title\", \"Title\"}, {\"runtime_minutes\", \"Runtime (Min.)\"}, {\"status\", \"Status\"}, {\"tagline\", \"Tagline\"}, {\"trailer\", \"Trailer\"}, {\"vote_count\", \"Total Vote\"}, {\"release_date\", \"Release Date\"}}),",
+      "    #\"Uppercased Text\" = Table.TransformColumns(#\"Renamed Columns\",{{\"Language\", Text.Upper, type text}}),",
+      "    #\"Renamed Columns1\" = Table.RenameColumns(#\"Uppercased Text\",{{\"revenue\", \"Revenue\"}})",
+      "in",
+      "    #\"Renamed Columns1\""
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Total Content#",
+  "expression": "DISTINCTCOUNT(dim_content[content_id])",
+  "formatString": "0",
+  "displayFolder": "Aggregations",
+  "lineageTag": "3db48f5a-8a73-4e3b-b7a9-ecf4a9470f0f"
+}

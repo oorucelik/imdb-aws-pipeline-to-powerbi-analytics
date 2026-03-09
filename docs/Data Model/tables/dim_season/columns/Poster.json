@@ -1,0 +1,14 @@
+{
+  "name": "Poster",
+  "dataType": "string",
+  "sourceColumn": "Poster",
+  "lineageTag": "8ee70e86-4868-46d0-9d3e-677267ad7f84",
+  "dataCategory": "ImageUrl",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

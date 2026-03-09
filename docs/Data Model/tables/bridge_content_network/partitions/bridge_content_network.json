@@ -1,0 +1,16 @@
+{
+  "name": "bridge_content_network",
+  "mode": "import",
+  "source": {
+    "type": "m",
+    "expression": [
+      "let",
+      "    Source = AmazonAthena.Databases(\"Amazon Athena\", null, []),",
+      "    AwsDataCatalog_Database = Source{[Name=\"AwsDataCatalog\",Kind=\"Database\"]}[Data],",
+      "    #\"oruc-db_Schema\" = AwsDataCatalog_Database{[Name=\"oruc-db\",Kind=\"Schema\"]}[Data],",
+      "    bridge_content_network_Table = #\"oruc-db_Schema\"{[Name=\"bridge_content_network\",Kind=\"Table\"]}[Data]",
+      "in",
+      "    bridge_content_network_Table"
+    ]
+  }
+}

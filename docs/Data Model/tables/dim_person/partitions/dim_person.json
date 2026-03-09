@@ -1,0 +1,17 @@
+{
+  "name": "dim_person",
+  "mode": "import",
+  "source": {
+    "type": "m",
+    "expression": [
+      "let",
+      "    Source = AmazonAthena.Databases(\"Amazon Athena\", null, []),",
+      "    AwsDataCatalog_Database = Source{[Name=\"AwsDataCatalog\",Kind=\"Database\"]}[Data],",
+      "    #\"oruc-db_Schema\" = AwsDataCatalog_Database{[Name=\"oruc-db\",Kind=\"Schema\"]}[Data],",
+      "    dim_person_Table = #\"oruc-db_Schema\"{[Name=\"dim_person\",Kind=\"Table\"]}[Data],",
+      "    #\"Renamed Columns\" = Table.RenameColumns(dim_person_Table,{{\"person_homepage\", \"Homepage\"}, {\"person_name\", \"Name\"}, {\"person_poster\", \"Poster\"}})",
+      "in",
+      "    #\"Renamed Columns\""
+    ]
+  }
+}

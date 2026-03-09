@@ -1,0 +1,20 @@
+{
+  "type": "calculated",
+  "name": "TrailerDisplay",
+  "dataType": "string",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "VAR currentTrailer = dim_content[Trailer]",
+    "RETURN IF(ISBLANK(currentTrailer),\"-\",currentTrailer)"
+  ],
+  "lineageTag": "f3624c5d-4544-4c87-a0eb-0973efcf0a85",
+  "dataCategory": "WebUrl",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

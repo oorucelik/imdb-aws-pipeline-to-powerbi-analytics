@@ -1,0 +1,22 @@
+{
+  "type": "calculated",
+  "name": "OverviewShort",
+  "dataType": "string",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "IF(",
+    "    LEN(dim_season[Overview])>=300,",
+    "    LEFT(dim_season[Overview],300) & \"..\",",
+    "    dim_season[Overview]",
+    ")"
+  ],
+  "lineageTag": "9b3abc80-85b8-4998-9e1d-64ed3edd3da1",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "type": "calculated",
+  "name": "NetworksDisplay",
+  "dataType": "string",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "VAR currentNetworks = dim_content[Networks]",
+    "RETURN IF(ISBLANK(currentNetworks),\"-\",currentNetworks)"
+  ],
+  "lineageTag": "9fd6e8c6-7ade-4cd4-8d50-4e43fac8a986",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

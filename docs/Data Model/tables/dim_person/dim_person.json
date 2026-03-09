@@ -1,0 +1,10 @@
+{
+  "name": "dim_person",
+  "lineageTag": "0a078a3f-6d5d-4a81-ab2a-bd564356a20b",
+  "annotations": [
+    {
+      "name": "PBI_ResultType",
+      "value": "Table"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "693d0fd3-7530-4493-a81d-bd002c2a3a29",
+  "fromTable": "dim_content",
+  "fromColumn": "updated_at",
+  "toTable": "LocalDateTable_b257ed04-47c4-412f-a488-4238e6401bbd",
+  "toColumn": "Date",
+  "joinOnDateBehavior": "datePartOnly"
+}

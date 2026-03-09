@@ -1,0 +1,10 @@
+{
+  "name": "dim_genre",
+  "lineageTag": "47e702f2-7acc-4775-b80c-47273da1d71a",
+  "annotations": [
+    {
+      "name": "PBI_ResultType",
+      "value": "Table"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "dim_episode",
+  "lineageTag": "2a54744b-b50d-42dc-9b23-f16f1e0d4bc6",
+  "annotations": [
+    {
+      "name": "PBI_NavigationStepName",
+      "value": "Navigation"
+    },
+    {
+      "name": "PBI_ResultType",
+      "value": "Table"
+    }
+  ]
+}

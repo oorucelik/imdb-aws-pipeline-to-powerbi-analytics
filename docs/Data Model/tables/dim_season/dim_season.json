@@ -1,0 +1,14 @@
+{
+  "name": "dim_season",
+  "lineageTag": "9c01c6a8-491b-46c3-ba51-60bd19398427",
+  "annotations": [
+    {
+      "name": "PBI_NavigationStepName",
+      "value": "Navigation"
+    },
+    {
+      "name": "PBI_ResultType",
+      "value": "Table"
+    }
+  ]
+}

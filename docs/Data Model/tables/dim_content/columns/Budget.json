@@ -1,0 +1,14 @@
+{
+  "name": "Budget",
+  "dataType": "int64",
+  "sourceColumn": "Budget",
+  "formatString": "\\$#,0.###############;(\\$#,0.###############);\\$#,0.###############",
+  "lineageTag": "34f7f39f-7124-472b-a54e-853547b59d31",
+  "summarizeBy": "sum",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

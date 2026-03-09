@@ -1,0 +1,10 @@
+{
+  "name": "dim_production_company",
+  "lineageTag": "4c315508-69e5-4dca-8f10-8a9b372e1e15",
+  "annotations": [
+    {
+      "name": "PBI_ResultType",
+      "value": "Table"
+    }
+  ]
+}

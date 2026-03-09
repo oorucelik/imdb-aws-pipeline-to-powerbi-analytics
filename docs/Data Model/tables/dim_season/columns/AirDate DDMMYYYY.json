@@ -1,0 +1,19 @@
+{
+  "type": "calculated",
+  "name": "AirDate DDMMYYYY",
+  "dataType": "string",
+  "expression": "FORMAT(dim_season[Air Date].[Date],\"DD-MM-YYYY\",\"en\")",
+  "lineageTag": "4cbf49af-aff0-48c4-83c9-0347c3b289a3",
+  "summarizeBy": "none",
+  "changedProperties": [
+    {
+      "property": "DataType"
+    }
+  ],
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

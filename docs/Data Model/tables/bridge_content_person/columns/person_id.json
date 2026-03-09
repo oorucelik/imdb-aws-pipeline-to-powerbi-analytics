@@ -1,0 +1,13 @@
+{
+  "name": "person_id",
+  "dataType": "string",
+  "sourceColumn": "person_id",
+  "lineageTag": "942cd568-ff55-4ec2-930d-aa3d2e6577b1",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

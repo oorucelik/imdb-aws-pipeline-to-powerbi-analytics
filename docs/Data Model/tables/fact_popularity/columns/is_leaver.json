@@ -1,0 +1,14 @@
+{
+  "name": "is_leaver",
+  "dataType": "boolean",
+  "sourceColumn": "is_leaver",
+  "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+  "lineageTag": "fe07fe8d-56ea-4126-baaa-040244327537",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

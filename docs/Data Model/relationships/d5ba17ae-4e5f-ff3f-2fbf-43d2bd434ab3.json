@@ -1,0 +1,9 @@
+{
+  "name": "d5ba17ae-4e5f-ff3f-2fbf-43d2bd434ab3",
+  "fromTable": "bridge_content_person",
+  "fromColumn": "person_id",
+  "toTable": "dim_person",
+  "toColumn": "person_id",
+  "crossFilteringBehavior": "bothDirections",
+  "securityFilteringBehavior": "bothDirections"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "fact_popularity",
+  "lineageTag": "91e8845b-e415-4302-9594-d4ba4ab6d424",
+  "annotations": [
+    {
+      "name": "PBI_NavigationStepName",
+      "value": "Navigation"
+    },
+    {
+      "name": "PBI_ResultType",
+      "value": "Table"
+    }
+  ]
+}

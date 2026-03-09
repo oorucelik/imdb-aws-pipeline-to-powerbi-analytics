@@ -1,0 +1,13 @@
+{
+  "name": "Latest Air Date",
+  "expression": "MAX(dim_episode[Air Date])",
+  "formatString": "dd/mm/yyyy",
+  "displayFolder": "Dates",
+  "lineageTag": "e5cfc4a5-1158-4613-841c-a27e7bcf991c",
+  "annotations": [
+    {
+      "name": "PBI_FormatHint",
+      "value": "{\"isDateTimeCustom\":true}"
+    }
+  ]
+}

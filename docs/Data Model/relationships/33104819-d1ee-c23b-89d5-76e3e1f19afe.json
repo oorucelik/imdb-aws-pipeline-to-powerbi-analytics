@@ -1,0 +1,7 @@
+{
+  "name": "33104819-d1ee-c23b-89d5-76e3e1f19afe",
+  "fromTable": "bridge_content_interest",
+  "fromColumn": "interest_name",
+  "toTable": "dim_interest",
+  "toColumn": "Sub Genres"
+}

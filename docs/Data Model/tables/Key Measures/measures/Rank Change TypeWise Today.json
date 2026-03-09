@@ -1,0 +1,13 @@
+{
+  "name": "Rank Change TypeWise Today",
+  "expression": [
+    "",
+    "VAR todayRank = [Rank TypeWise Today]",
+    "VAR yesterdayRank = [Rank TypeWise Yesterday]",
+    "RETURN todayRank - yesterdayRank",
+    ""
+  ],
+  "formatString": "0",
+  "displayFolder": "Time Intelligence",
+  "lineageTag": "21d06e5d-3a88-457c-bc8a-ee3e3d3952cb"
+}

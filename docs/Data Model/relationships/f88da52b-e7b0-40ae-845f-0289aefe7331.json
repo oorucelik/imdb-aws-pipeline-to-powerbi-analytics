@@ -1,0 +1,8 @@
+{
+  "name": "f88da52b-e7b0-40ae-845f-0289aefe7331",
+  "fromTable": "dim_content",
+  "fromColumn": "Release Date",
+  "toTable": "LocalDateTable_381e6972-092b-4886-93b6-985753040bbe",
+  "toColumn": "Date",
+  "joinOnDateBehavior": "datePartOnly"
+}

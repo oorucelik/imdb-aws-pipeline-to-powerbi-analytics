@@ -1,0 +1,16 @@
+{
+  "name": "Quick Watch#",
+  "expression": [
+    "",
+    "VAR val = CALCULATE(",
+    "    DISTINCTCOUNT(dim_content[content_id]),",
+    "    dim_content[Runtime (Min.)] <= 90,",
+    "    NOT(ISBLANK(dim_content[Runtime (Min.)])),",
+    "    dim_content[Score] >= 7",
+    ")",
+    "RETURN IF(ISBLANK(val),0,val)"
+  ],
+  "formatString": "0",
+  "displayFolder": "KPIs",
+  "lineageTag": "84adb4d2-53fe-420f-86ae-eb3e80897a7f"
+}

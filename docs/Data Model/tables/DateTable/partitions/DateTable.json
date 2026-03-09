@@ -1,0 +1,25 @@
+{
+  "name": "DateTable",
+  "mode": "import",
+  "source": {
+    "type": "calculated",
+    "expression": [
+      "",
+      "VAR MinDate = DATE(2020, 1, 1)  ",
+      "VAR MaxDate = DATE(2030, 12, 31) ",
+      "VAR DateRange = CALENDAR(MinDate, MaxDate)",
+      "",
+      "RETURN",
+      "ADDCOLUMNS(",
+      "    DateRange,",
+      "    \"Year\", YEAR([Date]),",
+      "    \"Month\", MONTH([Date]),",
+      "    \"MonthName\", FORMAT([Date], \"MMMM\",\"en-US\"),",
+      "    \"MonthNameShort\", FORMAT([Date], \"MMM\",\"en-US\"),",
+      "    \"MonthDay\", FORMAT([Date], \"MMM DD\",\"en-US\"),",
+      "    \"DayOfWeek\", WEEKDAY([Date]),",
+      "    \"DayNameShort\", FORMAT([Date], \"ddd\",\"en-US\")",
+      ")"
+    ]
+  }
+}

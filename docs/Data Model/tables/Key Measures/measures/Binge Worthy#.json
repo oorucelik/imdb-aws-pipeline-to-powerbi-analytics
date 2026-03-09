@@ -1,0 +1,20 @@
+{
+  "name": "Binge Worthy#",
+  "expression": [
+    "",
+    "VAR val = COUNTROWS(",
+    "    FILTER(",
+    "        VALUES(dim_content[content_id]),",
+    "        VAR totalRuntime = CALCULATE(SUM(dim_content[TotalRuntime_Series]))",
+    "        VAR ContentScore = CALCULATE(MAX(dim_content[Score]))",
+    "        VAR avgEpisodeRuntime = CALCULATE(SUM(dim_content[AVG_Episode_Runtime]))",
+    "        RETURN ",
+    "            avgEpisodeRuntime>0 && avgEpisodeRuntime <=45 && ContentScore >= 7 && totalRuntime > 0 && totalRuntime <=480",
+    "    )",
+    ")",
+    "RETURN IF(ISBLANK(val),0,val)"
+  ],
+  "formatString": "0",
+  "displayFolder": "KPIs",
+  "lineageTag": "afe4f1c2-0ebe-4ba9-8f26-ec387253f955"
+}

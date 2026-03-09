@@ -1,0 +1,13 @@
+{
+  "name": "season_key",
+  "dataType": "string",
+  "sourceColumn": "season_key",
+  "lineageTag": "21fdb797-3095-4296-8fa0-a2a610029c77",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

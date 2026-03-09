@@ -1,0 +1,14 @@
+{
+  "name": "is_new_joiner",
+  "dataType": "boolean",
+  "sourceColumn": "is_new_joiner",
+  "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+  "lineageTag": "81de8f44-d630-4a29-bf24-6ad5f3edd312",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

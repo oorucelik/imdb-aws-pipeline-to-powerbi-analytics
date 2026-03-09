@@ -1,0 +1,18 @@
+{
+  "name": "Total Vote",
+  "expression": "SUM(dim_content[Total Vote])",
+  "displayFolder": "Aggregations",
+  "lineageTag": "4264b667-b303-4eda-a61f-dd15ad03c26d",
+  "formatStringDefinition": {
+    "expression": [
+      "VAR totalVote = SUM(dim_content[Total Vote])",
+      "RETURN",
+      "    SWITCH(",
+      "        TRUE(),",
+      "        totalVote<1000,\"0\",",
+      "        totalVote<1000000,\"#,.0K\",",
+      "        totalVote<1000000000,\"#,,.0M\"",
+      "    )"
+    ]
+  }
+}

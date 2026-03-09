@@ -1,0 +1,16 @@
+{
+  "type": "calculated",
+  "name": "TotalRuntime_Series",
+  "dataType": "int64",
+  "isDataTypeInferred": true,
+  "expression": "CALCULATE(SUM(dim_episode[Runtime (Min.)]))",
+  "formatString": "0",
+  "lineageTag": "80d2d483-4ba5-43f9-bfdf-a20103f4a6af",
+  "summarizeBy": "sum",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

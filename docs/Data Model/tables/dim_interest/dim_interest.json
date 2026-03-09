@@ -1,0 +1,10 @@
+{
+  "name": "dim_interest",
+  "lineageTag": "8a26b327-7b57-497d-acc0-00baa2c05002",
+  "annotations": [
+    {
+      "name": "PBI_ResultType",
+      "value": "Table"
+    }
+  ]
+}

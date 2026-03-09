@@ -1,0 +1,13 @@
+{
+  "name": "Earliest Air Date",
+  "expression": "MIN(dim_episode[Air Date])",
+  "formatString": "dd/mm/yyyy",
+  "displayFolder": "Dates",
+  "lineageTag": "656b534d-51c4-4ffb-a559-49aab552347b",
+  "annotations": [
+    {
+      "name": "PBI_FormatHint",
+      "value": "{\"isDateTimeCustom\":true}"
+    }
+  ]
+}

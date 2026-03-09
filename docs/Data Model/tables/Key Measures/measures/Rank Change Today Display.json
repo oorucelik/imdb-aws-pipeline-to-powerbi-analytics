@@ -1,0 +1,17 @@
+{
+  "name": "Rank Change Today Display",
+  "expression": [
+    "",
+    "VAR rankChange = [Rank Change Today]",
+    "VAR absValue = ABS(rankChange)",
+    "VAR prefix = IF(rankChange<0,\"+\",\"-\")",
+    "RETURN",
+    "    IF(",
+    "        rankChange<>0 && NOT(ISBLANK(rankChange)),",
+    "        prefix & absValue,",
+    "        \"\"",
+    "    )"
+  ],
+  "displayFolder": "Displays",
+  "lineageTag": "d4cffd16-c719-4f76-8578-b74d96813e47"
+}

@@ -1,0 +1,38 @@
+{
+  "type": "calculated",
+  "name": "Networks",
+  "dataType": "string",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "VAR _bridgeRows = ",
+    "    RELATEDTABLE( bridge_content_network )",
+    "",
+    "VAR _networkIDs =",
+    "    SELECTCOLUMNS( ",
+    "        _bridgeRows, ",
+    "        \"@nid\", bridge_content_network[network_id] ",
+    "    )",
+    "",
+    "VAR _networksWithCount =",
+    "    ADDCOLUMNS(",
+    "        DISTINCT( _networkIDs ),",
+    "        \"@name\",  LOOKUPVALUE( dim_network[Networks],      dim_network[network_id], [@nid] ),",
+    "        \"@count\", [Network#]",
+    "    )",
+    "",
+    "VAR _top3 =",
+    "    TOPN( 3, _networksWithCount, [@count], DESC, [@name], ASC )",
+    "",
+    "RETURN",
+    "    CONCATENATEX( _top3, [@name], \", \", [@count], DESC )"
+  ],
+  "lineageTag": "bacd2e94-2542-4867-b47e-98cf13f48f03",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}

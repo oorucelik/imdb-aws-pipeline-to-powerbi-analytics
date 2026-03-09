@@ -1,0 +1,18 @@
+{
+  "name": "Score Typewise Display",
+  "expression": [
+    "",
+    "VAR scoreMovie = SUM(dim_content[Score])",
+    "VAR scoreSerie = [Avg Series Score]",
+    "VAR typeContent = MAX(dim_content[TypeDisplay])",
+    "RETURN ",
+    "IF(",
+    "    typeContent = \"Movie\",",
+    "    scoreMovie,",
+    "    scoreSerie",
+    ")"
+  ],
+  "formatString": "0.0",
+  "displayFolder": "Displays",
+  "lineageTag": "2ceab6b7-1710-4f83-a6fa-4d5de79d84c4"
+}

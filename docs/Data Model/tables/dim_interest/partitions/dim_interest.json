@@ -1,0 +1,17 @@
+{
+  "name": "dim_interest",
+  "mode": "import",
+  "source": {
+    "type": "m",
+    "expression": [
+      "let",
+      "    Source = AmazonAthena.Databases(\"Amazon Athena\", null, []),",
+      "    AwsDataCatalog_Database = Source{[Name=\"AwsDataCatalog\",Kind=\"Database\"]}[Data],",
+      "    #\"oruc-db_Schema\" = AwsDataCatalog_Database{[Name=\"oruc-db\",Kind=\"Schema\"]}[Data],",
+      "    dim_interest_Table = #\"oruc-db_Schema\"{[Name=\"dim_interest\",Kind=\"Table\"]}[Data],",
+      "    #\"Renamed Columns\" = Table.RenameColumns(dim_interest_Table,{{\"interest_name\", \"Sub Genres\"}})",
+      "in",
+      "    #\"Renamed Columns\""
+    ]
+  }
+}

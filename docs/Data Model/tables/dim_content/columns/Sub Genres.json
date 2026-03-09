@@ -1,0 +1,22 @@
+{
+  "type": "calculated",
+  "name": "Sub Genres",
+  "dataType": "string",
+  "isDataTypeInferred": true,
+  "expression": [
+    "",
+    "CONCATENATEX(",
+    "    RELATEDTABLE(bridge_content_interest),",
+    "    RELATED(dim_interest[Sub Genres]),",
+    "    \", \"",
+    ")"
+  ],
+  "lineageTag": "869ae458-8b01-4a3a-90cd-9644be3a831a",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "Automatic"
+    }
+  ]
+}
